@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# ===== 真实业务数据（绝不提交，绝不公开）=====
+/data/
+/data/cases.db
+/data/corpus/
+evals/results-*.json
+
