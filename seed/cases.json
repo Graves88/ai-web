@@ -1,0 +1,211 @@
+[
+  {
+    "title": "某住宅小区公共区域智能照明（示例）",
+    "space_type": "住宅",
+    "year": 2024,
+    "region": "桂林",
+    "area_m2": 320,
+    "floor_height_m": 3.0,
+    "target_lux": 300,
+    "fixtures": [
+      { "type": "LED筒灯", "model": "DL-7W-30K", "watt": 7, "lumen": 630, "cct": 3000, "cri": 90, "qty": 42, "layout": "大堂/走廊吊顶均布，间距 1.2m" },
+      { "type": "LED射灯", "model": "SP-12W-30K", "watt": 12, "lumen": 1100, "cct": 3000, "cri": 90, "qty": 16, "layout": "入户门厅重点照明" },
+      { "type": "LED灯带", "model": "ST-8W-m", "watt": 8, "lumen": 720, "cct": 3000, "cri": 90, "qty": 30, "layout": "天花暗槽，单位按米计" }
+    ],
+    "budget_range": "5-8 万",
+    "design_points": ["公区/入户/电梯厅分区控制", "人体感应 + 定时场景", "色温统一 3000K 提升居住感"],
+    "highlights": ["夜间归家场景一键点亮动线", "走廊感应节能约 30%"],
+    "reuse_points": ["住宅公区可复用「筒灯均布 + 灯带洗顶」组合", "感应控制优先放在走廊与楼梯间"],
+    "raw_text": "示例脱敏资料：住宅小区公共区域（大堂、走廊、电梯厅）智能照明改造，含控制面板与场景联动，甲方为某置业公司。",
+    "status": "已确认",
+    "visibility": "public",
+    "tags": ["住宅", "智能控制", "公区"]
+  },
+  {
+    "title": "某写字楼大堂照明（示例）",
+    "space_type": "办公",
+    "year": 2023,
+    "region": "杭州",
+    "area_m2": 180,
+    "floor_height_m": 4.2,
+    "target_lux": 300,
+    "fixtures": [
+      { "type": "LED筒灯", "model": "DL-12W-40K", "watt": 12, "lumen": 1200, "cct": 4000, "cri": 85, "qty": 36, "layout": "大堂吊顶 1.5m 网格" },
+      { "type": "线性灯", "model": "LN-20W-40K", "watt": 20, "lumen": 1900, "cct": 4000, "cri": 85, "qty": 18, "layout": "前台背景与电梯厅线条" }
+    ],
+    "budget_range": "6-10 万",
+    "design_points": ["层高 4.2m 需控制 UGR", "前台重点照明与背景洗墙分离", "分回路预留调光"],
+    "highlights": ["大堂平均照度 320lx，UGR<19", "线性灯勾勒建筑线条"],
+    "reuse_points": ["层高 >4m 的大堂优先用筒灯 + 线性灯组合", "UGR 控制是办公空间验收重点"],
+    "raw_text": "示例脱敏资料：写字楼首层大堂照明设计，层高 4.2 米，要求 UGR 低于 19，含调光回路。",
+    "status": "已确认",
+    "visibility": "public",
+    "tags": ["办公", "大堂", "UGR"]
+  },
+  {
+    "title": "某中学教室照明改造（示例）",
+    "space_type": "教育",
+    "year": 2025,
+    "region": "南宁",
+    "area_m2": 65,
+    "floor_height_m": 3.0,
+    "target_lux": 300,
+    "fixtures": [
+      { "type": "教室专用灯盘", "model": "CL-36W-50K", "watt": 36, "lumen": 3400, "cct": 5000, "cri": 90, "qty": 9, "layout": "黑板区 3 盏、课桌区 6 盏" }
+    ],
+    "budget_range": "1-2 万",
+    "design_points": ["课桌面维持平均照度 ≥300lx、照度均匀度 ≥0.7", "黑板局部照明 ≥500lx", "眩光值 UGR ≤19"],
+    "highlights": ["改造后频闪消除、护眼达标", "照度均匀度 0.75"],
+    "reuse_points": ["教育照明必须看照度均匀度和 UGR，不只是平均照度", "黑板灯需单独一路"],
+    "raw_text": "示例脱敏资料：某中学 2 间教室照明改造，按国家教室照明标准设计，含黑板灯独立控制。",
+    "status": "已确认",
+    "visibility": "public",
+    "tags": ["教育", "教室", "护眼"]
+  },
+  {
+    "title": "某商场中庭照明（示例）",
+    "space_type": "商业",
+    "year": 2024,
+    "region": "长沙",
+    "area_m2": 400,
+    "floor_height_m": 12,
+    "target_lux": 500,
+    "fixtures": [
+      { "type": "LED投光灯", "model": "FL-150W-40K", "watt": 150, "lumen": 15000, "cct": 4000, "cri": 80, "qty": 12, "layout": "中庭顶部马道向下投射" },
+      { "type": "线性洗墙灯", "model": "WL-24W-40K", "watt": 24, "lumen": 2200, "cct": 4000, "cri": 80, "qty": 40, "layout": "四周栏板洗墙" }
+    ],
+    "budget_range": "15-25 万",
+    "design_points": ["高空间投光需计算维护系数", "洗墙灯与栏板间距影响均匀度", "预留节假日灯光场景"],
+    "highlights": ["中庭地面照度 520lx", "栏板洗墙均匀无暗区"],
+    "reuse_points": ["12m 以上高空间用投光灯而非筒灯", "商业空间要预留场景/节日模式"],
+    "raw_text": "示例脱敏资料：商业综合体中庭照明，挑高 12 米，需同时满足日常与节假日场景。",
+    "status": "已确认",
+    "visibility": "public",
+    "tags": ["商业", "中庭", "高空间"]
+  },
+  {
+    "title": "某别墅全屋智能照明（示例）",
+    "space_type": "住宅",
+    "year": 2025,
+    "region": "桂林",
+    "area_m2": 380,
+    "floor_height_m": 3.2,
+    "target_lux": 200,
+    "fixtures": [
+      { "type": "LED射灯", "model": "SP-7W-30K", "watt": 7, "lumen": 600, "cct": 3000, "cri": 95, "qty": 60, "layout": "客餐厅/卧室重点照明" },
+      { "type": "LED筒灯", "model": "DL-9W-30K", "watt": 9, "lumen": 800, "cct": 3000, "cri": 95, "qty": 34, "layout": "过道/卫生间" },
+      { "type": "LED灯带", "model": "ST-10W-m", "watt": 10, "lumen": 900, "cct": 3000, "cri": 95, "qty": 55, "layout": "吊顶暗槽/柜内" }
+    ],
+    "budget_range": "20-30 万",
+    "design_points": ["高显色 Ra≥95 还原材质", "全屋场景：回家/会客/影院/睡眠", "面板与语音双控制"],
+    "highlights": ["客厅 2700-4000K 可调", "影院模式一键联动窗帘"],
+    "reuse_points": ["别墅项目显色指数比照度更影响观感", "场景设计要跟着生活动线走"],
+    "raw_text": "示例脱敏资料：某别墅全屋智能照明，客户要求高显色与多场景联动，三层共 380 平米。",
+    "status": "已确认",
+    "visibility": "public",
+    "tags": ["住宅", "别墅", "智能场景", "高显色"]
+  },
+  {
+    "title": "某酒店客房照明（示例）",
+    "space_type": "商业",
+    "year": 2023,
+    "region": "三亚",
+    "area_m2": 28,
+    "floor_height_m": 2.8,
+    "target_lux": 150,
+    "fixtures": [
+      { "type": "LED筒灯", "model": "DL-6W-30K", "watt": 6, "lumen": 520, "cct": 3000, "cri": 90, "qty": 8, "layout": "玄关/卫生间/过道" },
+      { "type": "床头壁灯", "model": "WL-5W-27K", "watt": 5, "lumen": 400, "cct": 2700, "cri": 90, "qty": 2, "layout": "床头两侧" },
+      { "type": "LED灯带", "model": "ST-6W-m", "watt": 6, "lumen": 540, "cct": 3000, "cri": 90, "qty": 12, "layout": "窗帘盒/床头背景" }
+    ],
+    "budget_range": "0.8-1.5 万/间",
+    "design_points": ["阅读灯与氛围灯分层", "总控/夜灯/阅读三场景", "防眩光，避免直射床头"],
+    "highlights": ["客房光环境获业主好评", "夜灯模式功耗 <3W"],
+    "reuse_points": ["客房照明按「氛围-功能-阅读」三层设计", "夜灯单独回路是好评点"],
+    "raw_text": "示例脱敏资料：度假酒店客房照明，28 平米，要求三场景控制与低眩光。",
+    "status": "已确认",
+    "visibility": "public",
+    "tags": ["商业", "酒店", "客房"]
+  },
+  {
+    "title": "某市政道路照明（示例）",
+    "space_type": "道路",
+    "year": 2022,
+    "region": "柳州",
+    "area_m2": null,
+    "floor_height_m": null,
+    "target_lux": 20,
+    "fixtures": [
+      { "type": "LED路灯", "model": "SL-120W-40K", "watt": 120, "lumen": 14000, "cct": 4000, "cri": 70, "qty": 86, "layout": "双向对称布灯，杆距 30m，杆高 10m" }
+    ],
+    "budget_range": "60-90 万",
+    "design_points": ["按道路等级选平均照度与均匀度", "功率密度 LPD 需满足规范限值", "半夜降功率节能"],
+    "highlights": ["平均照度 22lx，均匀度 0.4", "后半夜降功率 50%"],
+    "reuse_points": ["道路照明看均匀度而非只看照度", "降功率策略是市政项目常见得分点"],
+    "raw_text": "示例脱敏资料：市政道路照明改造，双向四车道，杆距 30 米，含单灯控制与降功率。",
+    "status": "已确认",
+    "visibility": "public",
+    "tags": ["道路", "市政", "节能"]
+  },
+  {
+    "title": "某厂房高棚照明（示例）",
+    "space_type": "工业",
+    "year": 2024,
+    "region": "东莞",
+    "area_m2": 2500,
+    "floor_height_m": 9,
+    "target_lux": 300,
+    "fixtures": [
+      { "type": "LED高棚灯", "model": "HB-150W-50K", "watt": 150, "lumen": 16500, "cct": 5000, "cri": 80, "qty": 60, "layout": "9m 高空间，6m×6m 网格吊装" }
+    ],
+    "budget_range": "20-30 万",
+    "design_points": ["高空间用高棚灯替代金卤灯", "按设备布局调整布点", "维护系数按 0.7 取值"],
+    "highlights": ["照度 340lx，较原金卤灯省电 55%", "显色提升后产品检验更准"],
+    "reuse_points": ["工业厂房优先算「单位面积功率」对比节能", "维护系数影响实际效果，别忽略"],
+    "raw_text": "示例脱敏资料：电子厂房高棚照明改造，9 米层高，原为 400W 金卤灯，改为 LED 高棚灯。",
+    "status": "已确认",
+    "visibility": "public",
+    "tags": ["工业", "厂房", "节能改造"]
+  },
+  {
+    "title": "某广场夜景照明（示例）",
+    "space_type": "景观",
+    "year": 2025,
+    "region": "桂林",
+    "area_m2": 1200,
+    "floor_height_m": null,
+    "target_lux": 50,
+    "fixtures": [
+      { "type": "LED投光灯", "model": "FL-100W-RGBW", "watt": 100, "lumen": 9000, "cct": 4000, "cri": 80, "qty": 28, "layout": "绿化带与雕塑重点投光" },
+      { "type": "LED洗墙灯", "model": "WL-18W-30K", "watt": 18, "lumen": 1600, "cct": 3000, "cri": 80, "qty": 46, "layout": "台阶与景墙洗墙" }
+    ],
+    "budget_range": "25-40 万",
+    "design_points": ["避免光污染与溢散光", "色温控制在 3000K 以内", "节假日 DMX 场景"],
+    "highlights": ["周末灯光秀场景", "夜间照度与周边协调不刺眼"],
+    "reuse_points": ["景观照明先定色温纪律，再谈效果", "防溢散光是验收与投诉重点"],
+    "raw_text": "示例脱敏资料：城市广场夜景照明，含绿化投光、景墙洗墙与节假日灯光秀。",
+    "status": "已确认",
+    "visibility": "public",
+    "tags": ["景观", "夜景", "光污染"]
+  },
+  {
+    "title": "某医院走廊照明（示例）",
+    "space_type": "医疗",
+    "year": 2023,
+    "region": "南宁",
+    "area_m2": 420,
+    "floor_height_m": 2.6,
+    "target_lux": 200,
+    "fixtures": [
+      { "type": "净化灯盘", "model": "CL-36W-40K", "watt": 36, "lumen": 3200, "cct": 4000, "cri": 85, "qty": 46, "layout": "走廊 3m 间距均布" }
+    ],
+    "budget_range": "8-12 万",
+    "design_points": ["低眩光避免病人平躺时刺眼", "夜间值班模式降到 30%", "易清洁灯具外壳"],
+    "highlights": ["UGR<19，夜间低照度模式", "灯具可擦洗满足院感要求"],
+    "reuse_points": ["医疗空间眩光与清洁性优先于美观", "夜间模式是医院刚需"],
+    "raw_text": "示例脱敏资料：医院住院部走廊照明，含夜间值班低照度模式与易清洁灯具要求。",
+    "status": "已确认",
+    "visibility": "public",
+    "tags": ["医疗", "走廊", "低眩光"]
+  }
+]

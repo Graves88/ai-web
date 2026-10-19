@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -52,11 +53,19 @@ export default function Home() {
 
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col px-4 py-6">
-      <header className="mb-4">
-        <h1 className="text-xl font-semibold">AI Web App · Day 1</h1>
-        <p className="mt-1 text-sm text-zinc-500">
-          最小链路：浏览器 → /api/chat → 模型 → 返回。密钥只在服务端。
-        </p>
+      <header className="mb-4 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-xl font-semibold">AI 调试页 · Day 1</h1>
+          <p className="mt-1 text-sm text-zinc-500">
+            最小链路：浏览器 → /api/chat → 模型 → 返回。密钥只在服务端。
+          </p>
+        </div>
+        <Link
+          href="/cases"
+          className="shrink-0 rounded-lg border border-zinc-300 px-3 py-1.5 text-sm hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-900"
+        >
+          → 案例库
+        </Link>
       </header>
 
       <div className="flex-1 space-y-3 overflow-y-auto rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
