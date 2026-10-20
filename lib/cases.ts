@@ -76,6 +76,63 @@ export function calcTotals(fixtures: Fixture[], areaM2: number | null) {
   };
 }
 
+/** 场所类型白名单等常量放在 lib/constants.ts（客户端组件也要用，不能带 node:sqlite） */
+export { SPACE_TYPES, type SpaceType } from "./constants";
+import type { SpaceType } from "./constants";
+
+export type CaseInput = {
+  title: string;
+  space_type: SpaceType;
+  year?: number | null;
+  region?: string | null;
+  area_m2?: number | null;
+  floor_height_m?: number | null;
+  target_lux?: number | null;
+  fixtures: Fixture[];
+  budget_range?: string | null;
+  design_points?: string[];
+  highlights?: string[];
+  reuse_points?: string[];
+  raw_text?: string | null;
+  status?: string;
+  visibility?: string;
+  tags?: string[];
+};
+
+/** 新建案例：计算字段在这里算好再入库（不信任前端传来的 total_w/lpd） */
+export function createCase(input: CaseInput): number {
+  const db = getDb();
+  const { total_w, lpd } = calcTotals(input.fixtures, input.area_m2 ?? null);
+  const info = db
+    .prepare(
+      `INSERT INTO cases (title, space_type, year, region, area_m2, floor_height_m, target_lux,
+         fixtures, total_w, lpd, budget_range, design_points, highlights, reuse_points,
+         raw_text, status, visibility, tags)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+    )
+    .run(
+      input.title,
+      input.space_type,
+      input.year ?? null,
+      input.region ?? null,
+      input.area_m2 ?? null,
+      input.floor_height_m ?? null,
+      input.target_lux ?? null,
+      JSON.stringify(input.fixtures ?? []),
+      total_w,
+      lpd,
+      input.budget_range ?? null,
+      JSON.stringify(input.design_points ?? []),
+      JSON.stringify(input.highlights ?? []),
+      JSON.stringify(input.reuse_points ?? []),
+      input.raw_text ?? null,
+      input.status ?? "待校对",
+      input.visibility ?? "private",
+      JSON.stringify(input.tags ?? []),
+    );
+  return Number(info.lastInsertRowid);
+}
+
 export function listCases(filter?: { spaceType?: string; keyword?: string }): CaseItem[] {
   const db = getDb();
   const where: string[] = [];

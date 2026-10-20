@@ -1,19 +1,9 @@
 import Link from "next/link";
 import { listCases, listSpaceTypes } from "@/lib/cases";
+import { SPACE_EMOJI } from "@/lib/constants";
 
 // 每次请求都读数据库（不预渲染成静态页）
 export const dynamic = "force-dynamic";
-
-const SPACE_EMOJI: Record<string, string> = {
-  住宅: "🏠",
-  办公: "🏢",
-  教育: "🏫",
-  商业: "🛍️",
-  工业: "🏭",
-  景观: "🌳",
-  道路: "🛣️",
-  医疗: "🏥",
-};
 
 export default function CasesPage() {
   const cases = listCases();
@@ -29,9 +19,14 @@ export default function CasesPage() {
               共 {cases.length} 个案例 · 按场所类型 {spaceTypes.length} 类 · 示例数据已脱敏
             </p>
           </div>
-          <Link href="/" className="text-sm text-zinc-500 underline underline-offset-4">
-            AI 调试页
-          </Link>
+          <div className="flex shrink-0 items-center gap-3">
+            <Link href="/cases/new" className="rounded-lg bg-zinc-900 px-3 py-1.5 text-sm text-white hover:opacity-90 dark:bg-white dark:text-black">
+              ＋ 新建案例
+            </Link>
+            <Link href="/" className="text-sm text-zinc-500 underline underline-offset-4">
+              AI 调试页
+            </Link>
+          </div>
         </div>
         <div className="mt-4 flex flex-wrap gap-2">
           {spaceTypes.map((t) => (

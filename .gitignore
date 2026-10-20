@@ -46,3 +46,7 @@ next-env.d.ts
 /data/corpus/
 evals/results-*.json
 
+# 冒烟测试产生的临时日志
+.next-start*.log
+
+
