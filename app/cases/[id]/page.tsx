@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { calcTotals, getCase } from "@/lib/cases";
+import InterpretPanel from "./InterpretPanel";
 
 export const dynamic = "force-dynamic";
 
@@ -116,13 +117,8 @@ export default async function CaseDetailPage({
         <Section title="可复用点" items={item.reuse_points} />
       </div>
 
-      {/* AI 解读占位：D3 接流式接口 */}
-      <section className="mt-6 rounded-2xl border border-dashed border-zinc-300 p-4 dark:border-zinc-700">
-        <h2 className="text-sm font-semibold">AI 解读</h2>
-        <p className="mt-1 text-sm text-zinc-500">
-          D3 会在这里接流式输出：亮点 / 适用场景 / 可复用建议，并要求引用本文参数。
-        </p>
-      </section>
+      {/* AI 解读：客户端组件，走 /api/interpret 的 SSE 流 */}
+      <InterpretPanel caseId={item.id} />
 
       {item.raw_text && (
         <details className="mt-6 rounded-2xl border border-zinc-200 p-4 dark:border-zinc-800">
