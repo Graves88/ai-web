@@ -30,6 +30,7 @@ export default async function CaseDetailPage({
   if (!item) notFound();
 
   const totals = calcTotals(item.fixtures, item.area_m2);
+  const demo = process.env.DEMO_MODE === "1";
 
   const specs: [string, string][] = [
     ["场所类型", item.space_type],
@@ -54,13 +55,21 @@ export default async function CaseDetailPage({
           <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
             {item.status} · {item.visibility}
           </span>
-          <Link
-            href={`/cases/${item.id}/edit`}
-            className="rounded-lg border border-zinc-300 px-3 py-1.5 text-xs hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-900"
-          >
-            编辑
-          </Link>
-          <DeleteCaseButton id={item.id} title={item.title} />
+          {demo ? (
+            <span className="rounded-full bg-amber-100 px-3 py-1 text-xs text-amber-700 dark:bg-amber-950 dark:text-amber-300">
+              只读演示版
+            </span>
+          ) : (
+            <>
+              <Link
+                href={`/cases/${item.id}/edit`}
+                className="rounded-lg border border-zinc-300 px-3 py-1.5 text-xs hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-900"
+              >
+                编辑
+              </Link>
+              <DeleteCaseButton id={item.id} title={item.title} />
+            </>
+          )}
         </div>
       </div>
 
@@ -128,7 +137,7 @@ export default async function CaseDetailPage({
       </div>
 
       {/* AI 解读：客户端组件，走 /api/interpret 的 SSE 流 */}
-      <InterpretPanel caseId={item.id} />
+      <InterpretPanel caseId={item.id} demo={demo} />
 
       {item.raw_text && (
         <details className="mt-6 rounded-2xl border border-zinc-200 p-4 dark:border-zinc-800">

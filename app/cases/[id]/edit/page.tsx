@@ -1,11 +1,13 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { getCase } from "@/lib/cases";
 import CaseForm from "../../CaseForm";
 
 export const dynamic = "force-dynamic";
 
 export default async function EditCasePage({ params }: { params: Promise<{ id: string }> }) {
+  if (process.env.DEMO_MODE === "1") redirect("/cases");
+
   const { id } = await params;
   const item = getCase(Number(id));
   if (!item) notFound();

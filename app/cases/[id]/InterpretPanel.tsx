@@ -12,7 +12,7 @@ const PHASE_TEXT: Record<Phase, string> = {
   error: "",
 };
 
-export default function InterpretPanel({ caseId }: { caseId: number }) {
+export default function InterpretPanel({ caseId, demo = false }: { caseId: number; demo?: boolean }) {
   const [text, setText] = useState("");
   const [phase, setPhase] = useState<Phase>("idle");
   const [error, setError] = useState<string | null>(null);
@@ -127,7 +127,7 @@ export default function InterpretPanel({ caseId }: { caseId: number }) {
 
       <div className="mt-2 flex items-center justify-between text-xs text-zinc-400">
         <span>{phase === "error" ? "" : PHASE_TEXT[phase]}</span>
-        <span>prompt v1 · 流式输出</span>
+        <span>{demo ? "演示：预生成解读（不调模型）" : "prompt v1 · 流式输出"}</span>
       </div>
       {error && (
         <p className="mt-2 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700 dark:bg-red-950 dark:text-red-300">

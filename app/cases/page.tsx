@@ -16,6 +16,7 @@ export default async function CasesPage({ searchParams }: { searchParams: Search
   const cases = listCases({ spaceType: space || undefined, keyword: q || undefined });
   const allSpaceTypes = listSpaceTypes();
   const hasFilter = Boolean(space || q);
+  const demo = process.env.DEMO_MODE === "1";
 
   // 保留搜索词/筛选条件的辅助函数
   const hrefWith = (next: { space?: string; q?: string }) => {
@@ -49,12 +50,20 @@ export default async function CasesPage({ searchParams }: { searchParams: Search
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-3">
-            <Link href="/cases/new" className="rounded-lg bg-zinc-900 px-3 py-1.5 text-sm text-white hover:opacity-90 dark:bg-white dark:text-black">
-              ＋ 新建案例
-            </Link>
-            <Link href="/" className="text-sm text-zinc-500 underline underline-offset-4">
-              AI 调试页
-            </Link>
+            {demo ? (
+              <span className="rounded-full bg-amber-100 px-3 py-1 text-xs text-amber-700 dark:bg-amber-950 dark:text-amber-300">
+                只读演示版
+              </span>
+            ) : (
+              <Link href="/cases/new" className="rounded-lg bg-zinc-900 px-3 py-1.5 text-sm text-white hover:opacity-90 dark:bg-white dark:text-black">
+                ＋ 新建案例
+              </Link>
+            )}
+            {!demo && (
+              <Link href="/" className="text-sm text-zinc-500 underline underline-offset-4">
+                AI 调试页
+              </Link>
+            )}
           </div>
         </div>
 

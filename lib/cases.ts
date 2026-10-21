@@ -1,15 +1,12 @@
 import { getDb } from "./db";
+import { calcTotals, type Fixture } from "./calc";
+import { demoGetCase, demoListCases, demoListSpaceTypes } from "./demo";
 
-export type Fixture = {
-  type: string;
-  model?: string;
-  watt: number;
-  lumen?: number;
-  cct?: number;
-  cri?: number;
-  qty: number;
-  layout?: string;
-};
+// 纯计算与 Fixture 类型放在 lib/calc.ts（客户端也可安全引用）
+export { calcTotals, type Fixture } from "./calc";
+
+/** 演示模式：只读 seed 数据，不碰 SQLite（公网上 Vercel 的文件系统是只读的） */
+const isDemo = () => process.env.DEMO_MODE === "1";
 
 export type CaseRow = {
   id: number;
@@ -63,19 +60,6 @@ function toItem(row: CaseRow): CaseItem {
   };
 }
 
-/**
- * 计算字段：总功率与功率密度。
- * 注意——算数交给代码，绝不交给模型（P3 的核心原则）。
- */
-export function calcTotals(fixtures: Fixture[], areaM2: number | null) {
-  const totalW = fixtures.reduce((sum, f) => sum + (Number(f.watt) || 0) * (Number(f.qty) || 0), 0);
-  const lpd = areaM2 && areaM2 > 0 ? totalW / areaM2 : null;
-  return {
-    total_w: Math.round(totalW * 10) / 10,
-    lpd: lpd === null ? null : Math.round(lpd * 100) / 100,
-  };
-}
-
 /** 场所类型白名单等常量放在 lib/constants.ts（客户端组件也要用，不能带 node:sqlite） */
 export { SPACE_TYPES, type SpaceType } from "./constants";
 import type { SpaceType } from "./constants";
@@ -101,6 +85,7 @@ export type CaseInput = {
 
 /** 新建案例：计算字段在这里算好再入库（不信任前端传来的 total_w/lpd） */
 export function createCase(input: CaseInput): number {
+  if (isDemo()) throw new Error("演示模式为只读，不能新建案例");
   const db = getDb();
   const { total_w, lpd } = calcTotals(input.fixtures, input.area_m2 ?? null);
   const info = db
@@ -134,6 +119,7 @@ export function createCase(input: CaseInput): number {
 }
 
 export function listCases(filter?: { spaceType?: string; keyword?: string }): CaseItem[] {
+  if (isDemo()) return demoListCases(filter);
   const db = getDb();
   const where: string[] = [];
   const params: (string | number)[] = [];
@@ -152,6 +138,7 @@ export function listCases(filter?: { spaceType?: string; keyword?: string }): Ca
 }
 
 export function getCase(id: number): CaseItem | null {
+  if (isDemo()) return demoGetCase(id);
   const db = getDb();
   const row = db.prepare("SELECT * FROM cases WHERE id = ?").get(id) as unknown as CaseRow | undefined;
   return row ? toItem(row) : null;
@@ -159,6 +146,7 @@ export function getCase(id: number): CaseItem | null {
 
 /** 更新案例：同样在服务端重算 total_w / lpd；返回是否命中记录 */
 export function updateCase(id: number, input: CaseInput): boolean {
+  if (isDemo()) throw new Error("演示模式为只读，不能修改案例");
   const db = getDb();
   const { total_w, lpd } = calcTotals(input.fixtures, input.area_m2 ?? null);
   const info = db
@@ -194,12 +182,14 @@ export function updateCase(id: number, input: CaseInput): boolean {
 
 /** 删除案例（case_media 靠外键 CASCADE 一起删） */
 export function deleteCase(id: number): boolean {
+  if (isDemo()) throw new Error("演示模式为只读，不能删除案例");
   const db = getDb();
   const info = db.prepare("DELETE FROM cases WHERE id = ?").run(id);
   return Number(info.changes) > 0;
 }
 
 export function listSpaceTypes(): string[] {
+  if (isDemo()) return demoListSpaceTypes();
   const db = getDb();
   const rows = db.prepare("SELECT space_type, COUNT(*) AS n FROM cases GROUP BY space_type ORDER BY n DESC").all() as unknown as {
     space_type: string;

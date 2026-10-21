@@ -1,4 +1,5 @@
 import { getCase } from "@/lib/cases";
+import { getDemoInterpretation } from "@/lib/demo-interpretations";
 import { buildInterpretMessages } from "@/lib/prompts/interpret/v1";
 
 export const runtime = "nodejs";
@@ -10,16 +11,39 @@ const MODEL = process.env.LLM_MODEL ?? "deepseek-chat";
 const API_KEY = process.env.LLM_API_KEY ?? "";
 const TIMEOUT_MS = 60_000;
 
+const SSE_HEADERS = {
+  "Content-Type": "text/event-stream; charset=utf-8",
+  "Cache-Control": "no-cache, no-transform",
+  Connection: "keep-alive",
+  "X-Accel-Buffering": "no", // 让 Nginx 之类不要缓冲
+};
+
+/** 演示模式：把预生成解读切成小段，模拟流式吐给前端（零 API 成本、不可能被刷） */
+function demoStream(text: string): Response {
+  const encoder = new TextEncoder();
+  const chunks = text.match(/[\s\S]{1,12}/g) ?? [];
+  const stream = new ReadableStream<Uint8Array>({
+    async start(ctrl) {
+      for (const chunk of chunks) {
+        ctrl.enqueue(encoder.encode(`data: ${JSON.stringify({ delta: chunk })}\n\n`));
+        await new Promise((r) => setTimeout(r, 18));
+      }
+      ctrl.enqueue(encoder.encode("data: [DONE]\n\n"));
+      ctrl.close();
+    },
+    cancel() {
+      /* 演示流无需清理 */
+    },
+  });
+  return new Response(stream, { headers: SSE_HEADERS });
+}
+
 /**
  * POST /api/interpret  { caseId: number }
  * 返回 SSE 流：每行形如  data: {"delta":"一段文字"}
  * 结束标记：data: [DONE]
  */
 export async function POST(req: Request) {
-  if (!API_KEY) {
-    return Response.json({ error: "服务端未配置 LLM_API_KEY" }, { status: 500 });
-  }
-
   let body: { caseId?: number } | null = null;
   try {
     body = await req.json();
@@ -29,6 +53,18 @@ export async function POST(req: Request) {
   const caseId = Number(body?.caseId);
   if (!Number.isInteger(caseId) || caseId <= 0) {
     return Response.json({ error: "caseId 必须是正整数" }, { status: 400 });
+  }
+
+  // —— 演示模式：读本地预生成结果，不调用任何模型 ——
+  if (process.env.DEMO_MODE === "1") {
+    if (!getCase(caseId)) return Response.json({ error: `案例 ${caseId} 不存在` }, { status: 404 });
+    const pre = getDemoInterpretation(caseId);
+    if (!pre) return Response.json({ error: "该案例还没有预生成解读" }, { status: 404 });
+    return demoStream(pre);
+  }
+
+  if (!API_KEY) {
+    return Response.json({ error: "服务端未配置 LLM_API_KEY" }, { status: 500 });
   }
 
   const item = getCase(caseId);
@@ -147,12 +183,5 @@ export async function POST(req: Request) {
     },
   });
 
-  return new Response(stream, {
-    headers: {
-      "Content-Type": "text/event-stream; charset=utf-8",
-      "Cache-Control": "no-cache, no-transform",
-      Connection: "keep-alive",
-      "X-Accel-Buffering": "no", // 让 Nginx 之类不要缓冲
-    },
-  });
+  return new Response(stream, { headers: SSE_HEADERS });
 }
