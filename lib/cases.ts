@@ -157,6 +157,48 @@ export function getCase(id: number): CaseItem | null {
   return row ? toItem(row) : null;
 }
 
+/** 更新案例：同样在服务端重算 total_w / lpd；返回是否命中记录 */
+export function updateCase(id: number, input: CaseInput): boolean {
+  const db = getDb();
+  const { total_w, lpd } = calcTotals(input.fixtures, input.area_m2 ?? null);
+  const info = db
+    .prepare(
+      `UPDATE cases SET title=?, space_type=?, year=?, region=?, area_m2=?, floor_height_m=?,
+         target_lux=?, fixtures=?, total_w=?, lpd=?, budget_range=?, design_points=?,
+         highlights=?, reuse_points=?, raw_text=?, status=?, visibility=?, tags=?
+       WHERE id=?`,
+    )
+    .run(
+      input.title,
+      input.space_type,
+      input.year ?? null,
+      input.region ?? null,
+      input.area_m2 ?? null,
+      input.floor_height_m ?? null,
+      input.target_lux ?? null,
+      JSON.stringify(input.fixtures ?? []),
+      total_w,
+      lpd,
+      input.budget_range ?? null,
+      JSON.stringify(input.design_points ?? []),
+      JSON.stringify(input.highlights ?? []),
+      JSON.stringify(input.reuse_points ?? []),
+      input.raw_text ?? null,
+      input.status ?? "待校对",
+      input.visibility ?? "private",
+      JSON.stringify(input.tags ?? []),
+      id,
+    );
+  return Number(info.changes) > 0;
+}
+
+/** 删除案例（case_media 靠外键 CASCADE 一起删） */
+export function deleteCase(id: number): boolean {
+  const db = getDb();
+  const info = db.prepare("DELETE FROM cases WHERE id = ?").run(id);
+  return Number(info.changes) > 0;
+}
+
 export function listSpaceTypes(): string[] {
   const db = getDb();
   const rows = db.prepare("SELECT space_type, COUNT(*) AS n FROM cases GROUP BY space_type ORDER BY n DESC").all() as unknown as {

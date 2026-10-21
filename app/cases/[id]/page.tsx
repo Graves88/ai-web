@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { calcTotals, getCase } from "@/lib/cases";
 import InterpretPanel from "./InterpretPanel";
+import DeleteCaseButton from "./DeleteCaseButton";
 
 export const dynamic = "force-dynamic";
 
@@ -45,13 +46,22 @@ export default async function CaseDetailPage({
 
   return (
     <main className="mx-auto w-full max-w-4xl px-4 py-8">
-      <div className="mb-6 flex items-center justify-between gap-4">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <Link href="/cases" className="text-sm text-zinc-500 underline underline-offset-4">
           ← 返回案例列表
         </Link>
-        <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-          {item.status} · {item.visibility}
-        </span>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+            {item.status} · {item.visibility}
+          </span>
+          <Link
+            href={`/cases/${item.id}/edit`}
+            className="rounded-lg border border-zinc-300 px-3 py-1.5 text-xs hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-900"
+          >
+            编辑
+          </Link>
+          <DeleteCaseButton id={item.id} title={item.title} />
+        </div>
       </div>
 
       <h1 className="text-2xl font-semibold">{item.title}</h1>

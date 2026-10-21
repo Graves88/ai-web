@@ -2,7 +2,15 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CASE_STATUSES, CASE_VISIBILITIES, SPACE_TYPES, type SpaceType, type CaseStatus, type CaseVisibility, VISIBILITY_LABEL } from "@/lib/constants";
+import {
+  CASE_STATUSES,
+  CASE_VISIBILITIES,
+  SPACE_TYPES,
+  VISIBILITY_LABEL,
+  type CaseStatus,
+  type CaseVisibility,
+  type SpaceType,
+} from "@/lib/constants";
 
 type FixtureRow = {
   type: string;
@@ -13,6 +21,36 @@ type FixtureRow = {
   cri: string;
   qty: string;
   layout: string;
+};
+
+/** 编辑模式传入的初值结构（与 CaseItem 结构兼容，只取表单需要的字段） */
+export type CaseFormInitial = {
+  id: number;
+  title: string;
+  space_type: string;
+  year: number | null;
+  region: string | null;
+  area_m2: number | null;
+  floor_height_m: number | null;
+  target_lux: number | null;
+  fixtures: Array<{
+    type: string;
+    model?: string;
+    watt: number;
+    lumen?: number;
+    cct?: number;
+    cri?: number;
+    qty: number;
+    layout?: string;
+  }>;
+  budget_range: string | null;
+  design_points: string[];
+  highlights: string[];
+  reuse_points: string[];
+  raw_text: string | null;
+  status: string;
+  visibility: string;
+  tags: string[];
 };
 
 const emptyFixture = (): FixtureRow => ({
@@ -62,6 +100,10 @@ const initialForm: FormState = {
   visibility: "private",
 };
 
+function str(v: number | null | undefined): string {
+  return v === null || v === undefined ? "" : String(v);
+}
+
 function num(v: string): number | undefined {
   const t = v.trim();
   if (!t) return undefined;
@@ -83,10 +125,53 @@ function Label({ children }: { children: React.ReactNode }) {
 const inputCls =
   "w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900";
 
-export default function CaseForm() {
+export default function CaseForm({
+  mode = "create",
+  initial,
+}: {
+  mode?: "create" | "edit";
+  initial?: CaseFormInitial;
+}) {
   const router = useRouter();
-  const [form, setForm] = useState<FormState>(initialForm);
-  const [fixtures, setFixtures] = useState<FixtureRow[]>([emptyFixture()]);
+  const isEdit = mode === "edit" && !!initial;
+
+  const [form, setForm] = useState<FormState>(() =>
+    initial
+      ? {
+          title: initial.title,
+          space_type: initial.space_type as SpaceType,
+          year: str(initial.year),
+          region: initial.region ?? "",
+          area_m2: str(initial.area_m2),
+          floor_height_m: str(initial.floor_height_m),
+          target_lux: str(initial.target_lux),
+          budget_range: initial.budget_range ?? "",
+          tags: initial.tags.join(", "),
+          design_points: initial.design_points.join("\n"),
+          highlights: initial.highlights.join("\n"),
+          reuse_points: initial.reuse_points.join("\n"),
+          raw_text: initial.raw_text ?? "",
+          status: initial.status as CaseStatus,
+          visibility: initial.visibility as CaseVisibility,
+        }
+      : initialForm,
+  );
+
+  const [fixtures, setFixtures] = useState<FixtureRow[]>(() =>
+    initial && initial.fixtures.length > 0
+      ? initial.fixtures.map((f) => ({
+          type: f.type,
+          model: f.model ?? "",
+          watt: str(f.watt),
+          lumen: str(f.lumen),
+          cct: str(f.cct),
+          cri: str(f.cri),
+          qty: str(f.qty),
+          layout: f.layout ?? "",
+        }))
+      : [emptyFixture()],
+  );
+
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [issues, setIssues] = useState<{ path: string; message: string }[]>([]);
@@ -99,7 +184,6 @@ export default function CaseForm() {
     setFixtures((rows) => rows.map((r, idx) => (idx === i ? { ...r, [key]: value } : r)));
   }
 
-  // 实时计算：和 lib/cases.ts 的 calcTotals 同一套公式（前端只是预览，最终以服务端为准）
   const totals = useMemo(() => {
     const valid = fixtures.filter((f) => num(f.watt) !== undefined && num(f.qty) !== undefined);
     const totalW = valid.reduce((s, f) => s + (num(f.watt) ?? 0) * (num(f.qty) ?? 0), 0);
@@ -151,8 +235,9 @@ export default function CaseForm() {
           })),
       };
 
-      const res = await fetch("/api/cases", {
-        method: "POST",
+      const url = isEdit ? `/api/cases/${initial!.id}` : "/api/cases";
+      const res = await fetch(url, {
+        method: isEdit ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
@@ -173,7 +258,6 @@ export default function CaseForm() {
 
   return (
     <form onSubmit={submit} className="space-y-6">
-      {/* 基本信息 */}
       <section className="rounded-2xl border border-zinc-200 p-4 dark:border-zinc-800">
         <h2 className="mb-3 text-sm font-semibold">基本信息</h2>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -222,7 +306,6 @@ export default function CaseForm() {
         </div>
       </section>
 
-      {/* 灯具清单 */}
       <section className="rounded-2xl border border-zinc-200 p-4 dark:border-zinc-800">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-sm font-semibold">灯具清单</h2>
@@ -285,7 +368,6 @@ export default function CaseForm() {
         </div>
       </section>
 
-      {/* 要点与原始资料 */}
       <section className="rounded-2xl border border-zinc-200 p-4 dark:border-zinc-800">
         <h2 className="mb-3 text-sm font-semibold">要点与原始资料</h2>
         <div className="grid grid-cols-1 gap-3">
@@ -347,11 +429,12 @@ export default function CaseForm() {
 
       <div className="flex items-center gap-3">
         <button type="submit" disabled={submitting} className="rounded-lg bg-zinc-900 px-5 py-2 text-sm text-white disabled:opacity-40 dark:bg-white dark:text-black">
-          {submitting ? "保存中…" : "保存案例"}
+          {submitting ? "保存中…" : isEdit ? "保存修改" : "保存案例"}
         </button>
         <button type="button" onClick={() => router.back()} className="rounded-lg border border-zinc-300 px-4 py-2 text-sm dark:border-zinc-700">
           取消
         </button>
+        {isEdit && <span className="text-xs text-zinc-400">正在编辑 #{initial!.id}</span>}
       </div>
     </form>
   );

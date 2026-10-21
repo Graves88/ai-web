@@ -1,5 +1,5 @@
 import Link from "next/link";
-import CaseForm from "./CaseForm";
+import CaseForm from "../CaseForm";
 
 export default function NewCasePage() {
   return (
