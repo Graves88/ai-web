@@ -73,9 +73,14 @@ function buildMessages(c, id) {
 }
 
 const out = { ...existing };
+// 支持 --ids=1,5,8 只重生成指定案例
+const idsArg = process.argv.find((a) => a.startsWith("--ids="));
+const onlyIds = idsArg ? new Set(idsArg.slice(6).split(",").map((s) => s.trim())) : null;
+
 for (let i = 0; i < cases.length; i++) {
   const id = String(i + 1);
-  if (out[id] && !force) {
+  if (onlyIds && !onlyIds.has(id)) continue;
+  if (out[id] && !force && !onlyIds) {
     console.log(`#${id} 已存在，跳过`);
     continue;
   }

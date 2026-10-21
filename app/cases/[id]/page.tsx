@@ -39,6 +39,8 @@ export default async function CaseDetailPage({
   const totals = calcTotals(item.fixtures, item.area_m2);
   const demo = process.env.DEMO_MODE === "1";
   const fixtureCount = item.fixtures.reduce((s, f) => s + (Number(f.qty) || 0), 0);
+  const images = item.media.filter((m) => m.type === "image");
+  const videos = item.media.filter((m) => m.type === "video");
 
   const specs: [string, string][] = [
     ["场所", item.space_type],
@@ -55,13 +57,21 @@ export default async function CaseDetailPage({
 
   return (
     <main className="min-h-dvh">
-      {/* 封面（D6 换成相册轮播；现在用场所色渐变占位） */}
+      {/* 封面：有真实图片就用图片，否则回落到场所色渐变 + emoji */}
       <div
-        className={`relative flex aspect-[4/3] w-full items-center justify-center bg-gradient-to-br sm:aspect-[21/9] ${
+        className={`relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden bg-gradient-to-br sm:aspect-[21/9] ${
           SPACE_GRADIENT[item.space_type] ?? "from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900"
         }`}
       >
-        <span className="text-6xl drop-shadow sm:text-7xl">{SPACE_EMOJI[item.space_type] ?? "📁"}</span>
+        {item.cover ? (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={item.cover} alt={item.title} className="absolute inset-0 h-full w-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-black/20" />
+          </>
+        ) : (
+          <span className="text-6xl drop-shadow sm:text-7xl">{SPACE_EMOJI[item.space_type] ?? "📁"}</span>
+        )}
 
         <Link
           href="/cases"
@@ -128,6 +138,68 @@ export default async function CaseDetailPage({
               </div>
             ))}
           </dl>
+
+          {/* 相册（点击看大图） */}
+          {images.length > 1 && (
+            <section className="card-surface mt-4 p-3">
+              <h2 className="px-1 text-[13px] font-semibold">📷 现场与效果（{images.length} 张）</h2>
+              <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                {images.map((m, i) => (
+                  <a
+                    key={m.url + i}
+                    href={m.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="group relative aspect-[4/3] overflow-hidden rounded-xl bg-black/[0.04]"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={m.url}
+                      alt={m.title ?? ""}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
+                    />
+                    {m.title && (
+                      <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent px-2 pb-1.5 pt-4 text-[10.5px] text-white">
+                        {m.title}
+                      </span>
+                    )}
+                  </a>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* 视频：mp4 直接播；其它（B站/腾讯等）用 iframe 嵌入 */}
+          {videos.length > 0 && (
+            <section className="card-surface mt-4 p-3">
+              <h2 className="px-1 text-[13px] font-semibold">🎬 现场视频</h2>
+              <div className="mt-2 space-y-2">
+                {videos.map((m, i) =>
+                  /\.(mp4|webm|ogg)(\?|$)/i.test(m.url) ? (
+                    <video
+                      key={i}
+                      controls
+                      playsInline
+                      preload="none"
+                      poster={m.poster ?? undefined}
+                      src={m.url}
+                      className="w-full rounded-xl bg-black"
+                    />
+                  ) : (
+                    <iframe
+                      key={i}
+                      src={m.url}
+                      title={m.title ?? "视频"}
+                      allowFullScreen
+                      className="aspect-video w-full rounded-xl border-0"
+                    />
+                  ),
+                )}
+                {videos[0]?.title && <p className="px-1 text-[11px] text-[var(--muted)]">{videos[0].title}</p>}
+              </div>
+            </section>
+          )}
 
           {/* 灯具清单 */}
           <section className="card-surface mt-4 p-4">

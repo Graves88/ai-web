@@ -31,12 +31,23 @@ export type CaseRow = {
   created_at: string;
 };
 
+export type CaseMedia = {
+  id?: number;
+  type: "image" | "video";
+  url: string;
+  poster?: string | null;
+  title?: string | null;
+};
+
 export type CaseItem = Omit<CaseRow, "fixtures" | "design_points" | "highlights" | "reuse_points" | "tags"> & {
   fixtures: Fixture[];
   design_points: string[];
   highlights: string[];
   reuse_points: string[];
   tags: string[];
+  /** 相册/视频；第一条图片自动作为封面 */
+  media: CaseMedia[];
+  cover: string | null;
 };
 
 function parseJsonArray<T>(text: string | null, fallback: T[]): T[] {
@@ -49,7 +60,7 @@ function parseJsonArray<T>(text: string | null, fallback: T[]): T[] {
   }
 }
 
-function toItem(row: CaseRow): CaseItem {
+function toItem(row: CaseRow, media: CaseMedia[] = []): CaseItem {
   return {
     ...row,
     fixtures: parseJsonArray<Fixture>(row.fixtures, []),
@@ -57,7 +68,30 @@ function toItem(row: CaseRow): CaseItem {
     highlights: parseJsonArray<string>(row.highlights, []),
     reuse_points: parseJsonArray<string>(row.reuse_points, []),
     tags: parseJsonArray<string>(row.tags, []),
+    media,
+    cover: media.find((m) => m.type === "image")?.url ?? null,
   };
+}
+
+/** 把 case_media 表按 case_id 分组（真实模式用） */
+function loadMediaByCase(): Map<number, CaseMedia[]> {
+  const db = getDb();
+  const rows = db
+    .prepare("SELECT id, case_id, type, url, cover_url, title FROM case_media ORDER BY case_id, sort, id")
+    .all() as unknown as { id: number; case_id: number; type: string; url: string; cover_url: string | null; title: string | null }[];
+  const map = new Map<number, CaseMedia[]>();
+  for (const r of rows) {
+    const list = map.get(r.case_id) ?? [];
+    list.push({
+      id: r.id,
+      type: r.type === "video" ? "video" : "image",
+      url: r.url,
+      poster: r.cover_url,
+      title: r.title,
+    });
+    map.set(r.case_id, list);
+  }
+  return map;
 }
 
 /** 场所类型白名单等常量放在 lib/constants.ts（客户端组件也要用，不能带 node:sqlite） */
@@ -134,14 +168,16 @@ export function listCases(filter?: { spaceType?: string; keyword?: string }): Ca
   const sql =
     "SELECT * FROM cases" + (where.length ? " WHERE " + where.join(" AND ") : "") + " ORDER BY year DESC, id DESC";
   const rows = db.prepare(sql).all(...params) as unknown as CaseRow[];
-  return rows.map(toItem);
+  const mediaByCase = loadMediaByCase();
+  return rows.map((r) => toItem(r, mediaByCase.get(r.id) ?? []));
 }
 
 export function getCase(id: number): CaseItem | null {
   if (isDemo()) return demoGetCase(id);
   const db = getDb();
   const row = db.prepare("SELECT * FROM cases WHERE id = ?").get(id) as unknown as CaseRow | undefined;
-  return row ? toItem(row) : null;
+  if (!row) return null;
+  return toItem(row, loadMediaByCase().get(id) ?? []);
 }
 
 /** 更新案例：同样在服务端重算 total_w / lpd；返回是否命中记录 */

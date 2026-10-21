@@ -1,10 +1,11 @@
 // 纯常量模块：不依赖 node:sqlite，客户端组件也可以安全 import
-export const SPACE_TYPES = ["住宅", "办公", "教育", "商业", "工业", "景观", "道路", "医疗"] as const;
+export const SPACE_TYPES = ["住宅", "办公", "文旅", "商业", "教育", "工业", "景观", "道路", "医疗"] as const;
 export type SpaceType = (typeof SPACE_TYPES)[number];
 
 export const SPACE_EMOJI: Record<string, string> = {
   住宅: "🏠",
   办公: "🏢",
+  文旅: "🏕️",
   教育: "🏫",
   商业: "🛍️",
   工业: "🏭",
@@ -17,6 +18,7 @@ export const SPACE_EMOJI: Record<string, string> = {
 export const SPACE_GRADIENT: Record<string, string> = {
   住宅: "from-rose-100 via-orange-50 to-amber-100 dark:from-rose-950 dark:via-zinc-900 dark:to-amber-950",
   办公: "from-sky-100 via-blue-50 to-indigo-100 dark:from-sky-950 dark:via-zinc-900 dark:to-indigo-950",
+  文旅: "from-teal-100 via-cyan-50 to-sky-100 dark:from-teal-950 dark:via-zinc-900 dark:to-sky-950",
   教育: "from-emerald-100 via-teal-50 to-cyan-100 dark:from-emerald-950 dark:via-zinc-900 dark:to-cyan-950",
   商业: "from-fuchsia-100 via-pink-50 to-rose-100 dark:from-fuchsia-950 dark:via-zinc-900 dark:to-rose-950",
   工业: "from-slate-200 via-zinc-100 to-stone-200 dark:from-slate-800 dark:via-zinc-900 dark:to-stone-800",

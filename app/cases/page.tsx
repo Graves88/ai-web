@@ -135,19 +135,36 @@ export default async function CasesPage({ searchParams }: { searchParams: Search
                 href={`/cases/${c.id}`}
                 className="card-surface mb-3 block break-inside-avoid overflow-hidden transition active:scale-[0.985] sm:hover:-translate-y-0.5 sm:hover:shadow-lg"
               >
-                {/* 封面：有图后直接换成 <img>（D6）；现在用场所色渐变 + emoji */}
+                {/* 封面：有真实图片就渲染图片，没有则回落到场所色渐变 + emoji */}
                 <div
-                  className={`relative flex ${coverAspect(i)} w-full items-center justify-center bg-gradient-to-br ${
+                  className={`relative ${coverAspect(i)} w-full overflow-hidden bg-gradient-to-br ${
                     SPACE_GRADIENT[c.space_type] ?? "from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900"
                   }`}
                 >
-                  <span className="text-4xl drop-shadow-sm sm:text-5xl">{SPACE_EMOJI[c.space_type] ?? "📁"}</span>
+                  {c.cover ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={c.cover}
+                      alt={c.title}
+                      loading="lazy"
+                      className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center">
+                      <span className="text-4xl drop-shadow-sm sm:text-5xl">{SPACE_EMOJI[c.space_type] ?? "📁"}</span>
+                    </div>
+                  )}
                   <span className="absolute left-2 top-2 rounded-full bg-white/75 px-2 py-0.5 text-[10.5px] font-medium text-zinc-700 backdrop-blur dark:bg-black/50 dark:text-zinc-200">
                     {c.space_type}
                   </span>
                   {c.year && (
                     <span className="absolute right-2 top-2 rounded-full bg-black/25 px-2 py-0.5 text-[10.5px] text-white backdrop-blur">
                       {c.year}
+                    </span>
+                  )}
+                  {c.media.some((m) => m.type === "video") && (
+                    <span className="absolute bottom-2 right-2 flex h-6 w-6 items-center justify-center rounded-full bg-black/45 text-[11px] text-white backdrop-blur">
+                      ▶
                     </span>
                   )}
                 </div>

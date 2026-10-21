@@ -1,5 +1,5 @@
 import { calcTotals } from "./calc";
-import type { CaseItem, Fixture } from "./cases";
+import type { CaseItem, CaseMedia, Fixture } from "./cases";
 import seed from "@/seed/cases.json";
 
 /**
@@ -25,6 +25,8 @@ type SeedCase = {
   status?: string;
   visibility?: string;
   tags?: string[];
+  cover?: string;
+  media?: CaseMedia[];
 };
 
 const seedCases = seed as SeedCase[];
@@ -36,6 +38,7 @@ function toItems(): CaseItem[] {
   cache = seedCases.map((c, i) => {
     const fixtures = c.fixtures ?? [];
     const totals = calcTotals(fixtures, c.area_m2 ?? null);
+    const media = c.media ?? [];
     return {
       id: i + 1,
       title: c.title,
@@ -56,6 +59,8 @@ function toItems(): CaseItem[] {
       status: c.status ?? "已确认",
       visibility: c.visibility ?? "public",
       tags: c.tags ?? [],
+      media,
+      cover: c.cover ?? media.find((m) => m.type === "image")?.url ?? null,
       created_at: "",
     };
   });
