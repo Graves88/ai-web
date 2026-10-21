@@ -63,7 +63,7 @@ export default async function CaseDetailPage({
             <>
               <Link
                 href={`/cases/${item.id}/edit`}
-                className="rounded-lg border border-zinc-300 px-3 py-1.5 text-xs hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-900"
+                className="inline-flex min-h-9 items-center rounded-lg border border-zinc-300 px-3 text-xs hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-900"
               >
                 编辑
               </Link>
@@ -73,7 +73,7 @@ export default async function CaseDetailPage({
         </div>
       </div>
 
-      <h1 className="text-2xl font-semibold">{item.title}</h1>
+      <h1 className="text-xl font-semibold sm:text-2xl">{item.title}</h1>
       <div className="mt-2 flex flex-wrap gap-1">
         {item.tags.map((t) => (
           <span key={t} className="rounded bg-zinc-100 px-2 py-0.5 text-[11px] text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
@@ -92,10 +92,30 @@ export default async function CaseDetailPage({
         ))}
       </dl>
 
-      {/* 灯具清单 */}
+      {/* 灯具清单：桌面用表格，手机用卡片（表格横滚在手机上很难读） */}
       <section className="mt-6 rounded-2xl border border-zinc-200 p-4 dark:border-zinc-800">
         <h2 className="mb-3 text-sm font-semibold">灯具清单</h2>
-        <div className="overflow-x-auto">
+
+        {/* 手机：卡片 */}
+        <ul className="space-y-2 sm:hidden">
+          {item.fixtures.map((f, i) => (
+            <li key={i} className="rounded-xl bg-zinc-50 p-3 dark:bg-zinc-900">
+              <div className="flex items-baseline justify-between gap-2">
+                <span className="text-sm font-medium">{f.type}</span>
+                <span className="shrink-0 text-sm font-medium">
+                  {f.watt}W × {f.qty}
+                </span>
+              </div>
+              <p className="mt-1 text-xs text-zinc-500">
+                {f.model ?? "型号未填"} · {f.lumen ?? "—"}lm · {f.cct ?? "—"}K · Ra{f.cri ?? "—"}
+              </p>
+              {f.layout && <p className="mt-1 text-xs text-zinc-500">布置：{f.layout}</p>}
+            </li>
+          ))}
+        </ul>
+
+        {/* 桌面：表格 */}
+        <div className="hidden overflow-x-auto sm:block">
           <table className="w-full text-left text-sm">
             <thead className="text-xs text-zinc-500">
               <tr>

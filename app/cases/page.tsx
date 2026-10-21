@@ -30,12 +30,12 @@ export default async function CasesPage({ searchParams }: { searchParams: Search
   };
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-4 py-8">
-      <header className="mb-6">
-        <div className="flex items-baseline justify-between gap-4">
+    <main className="mx-auto w-full max-w-5xl px-4 py-6 sm:py-8">
+      <header className="mb-5 sm:mb-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
           <div>
-            <h1 className="text-2xl font-semibold">照明落地案例库</h1>
-            <p className="mt-1 text-sm text-zinc-500">
+            <h1 className="text-xl font-semibold sm:text-2xl">照明落地案例库</h1>
+            <p className="mt-1 text-xs text-zinc-500 sm:text-sm">
               {hasFilter ? (
                 <>
                   筛选结果 <b>{cases.length}</b> 条
@@ -55,7 +55,7 @@ export default async function CasesPage({ searchParams }: { searchParams: Search
                 只读演示版
               </span>
             ) : (
-              <Link href="/cases/new" className="rounded-lg bg-zinc-900 px-3 py-1.5 text-sm text-white hover:opacity-90 dark:bg-white dark:text-black">
+              <Link href="/cases/new" className="inline-flex min-h-10 items-center rounded-lg bg-zinc-900 px-4 text-sm text-white hover:opacity-90 dark:bg-white dark:text-black">
                 ＋ 新建案例
               </Link>
             )}
@@ -68,44 +68,47 @@ export default async function CasesPage({ searchParams }: { searchParams: Search
         </div>
 
         {/* 搜索 + 场所类型筛选（纯 URL 驱动，可分享、可后退） */}
-        <div className="mt-4 flex flex-wrap items-center gap-2">
-          <form action="/cases" method="get" className="flex items-center gap-2">
+        <div className="mt-4 flex flex-col gap-2">
+          <form action="/cases" method="get" className="flex w-full items-center gap-2 sm:w-auto">
             {space && <input type="hidden" name="space" value={space} />}
             <input
               name="q"
               defaultValue={q}
               placeholder="搜索标题或原始资料…"
-              className="w-56 rounded-lg border border-zinc-300 px-3 py-1.5 text-sm outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900"
+              inputMode="search"
+              className="h-10 w-full rounded-lg border border-zinc-300 px-3 text-base outline-none focus:border-zinc-500 sm:w-56 sm:text-sm dark:border-zinc-700 dark:bg-zinc-900"
             />
-            <button type="submit" className="rounded-lg border border-zinc-300 px-3 py-1.5 text-sm hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-900">
+            <button type="submit" className="inline-flex h-10 shrink-0 items-center rounded-lg border border-zinc-300 px-4 text-sm hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-900">
               搜索
             </button>
           </form>
 
-          <div className="h-5 w-px bg-zinc-200 dark:bg-zinc-800" />
+          {/* 手机上横向滚动，别把 8 个 chip 折成 3 行 */}
+          <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
+            {SPACE_TYPES.map((t) => {
+              const active = space === t;
+              return (
+                <Link
+                  key={t}
+                  href={active ? hrefWith({ space: "" }) : hrefWith({ space: t })}
+                  className={
+                    (active
+                      ? "bg-zinc-900 text-white dark:bg-white dark:text-black"
+                      : "border border-zinc-200 text-zinc-600 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-900") +
+                    " inline-flex min-h-9 shrink-0 items-center rounded-full px-3 text-xs"
+                  }
+                >
+                  {SPACE_EMOJI[t] ?? "📁"} {t}
+                </Link>
+              );
+            })}
 
-          {SPACE_TYPES.map((t) => {
-            const active = space === t;
-            return (
-              <Link
-                key={t}
-                href={active ? hrefWith({ space: "" }) : hrefWith({ space: t })}
-                className={
-                  active
-                    ? "rounded-full bg-zinc-900 px-3 py-1 text-xs text-white dark:bg-white dark:text-black"
-                    : "rounded-full border border-zinc-200 px-3 py-1 text-xs text-zinc-600 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-900"
-                }
-              >
-                {SPACE_EMOJI[t] ?? "📁"} {t}
+            {hasFilter && (
+              <Link href="/cases" className="inline-flex min-h-9 shrink-0 items-center px-2 text-xs text-zinc-500 underline underline-offset-4">
+                清空
               </Link>
-            );
-          })}
-
-          {hasFilter && (
-            <Link href="/cases" className="text-xs text-zinc-500 underline underline-offset-4">
-              清空筛选
-            </Link>
-          )}
+            )}
+          </div>
         </div>
       </header>
 
@@ -130,11 +133,11 @@ export default async function CasesPage({ searchParams }: { searchParams: Search
                 className="group flex h-full flex-col overflow-hidden rounded-2xl border border-zinc-200 transition hover:-translate-y-0.5 hover:shadow-md dark:border-zinc-800"
               >
                 {/* D6 会换成真实封面图；现在先用色块占位 */}
-                <div className="flex h-28 items-center justify-center bg-gradient-to-br from-zinc-100 to-zinc-200 text-3xl dark:from-zinc-800 dark:to-zinc-900">
+                <div className="flex aspect-[16/10] w-full items-center justify-center bg-gradient-to-br from-zinc-100 to-zinc-200 text-3xl dark:from-zinc-800 dark:to-zinc-900">
                   {SPACE_EMOJI[c.space_type] ?? "📁"}
                 </div>
                 <div className="flex flex-1 flex-col gap-2 p-4">
-                  <h2 className="line-clamp-2 text-sm font-medium group-hover:underline">{c.title}</h2>
+                  <h2 className="line-clamp-2 text-[15px] font-medium group-hover:underline">{c.title}</h2>
                   <p className="text-xs text-zinc-500">
                     {c.region ?? "—"} · {c.year ?? "—"} 年 · {c.area_m2 ? `${c.area_m2} ㎡` : "面积未填"}
                   </p>

@@ -17,12 +17,27 @@
   }
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family:
     ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Microsoft YaHei",
     sans-serif;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 手机上输入框字号必须 ≥16px，否则 iOS 聚焦时会自动放大页面 */
+@media (max-width: 640px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
 }
 
 /* 流式输出时让内容不跳动 */

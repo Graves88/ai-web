@@ -102,14 +102,14 @@ export default function InterpretPanel({ caseId, demo = false }: { caseId: numbe
           {busy ? (
             <button
               onClick={stop}
-              className="rounded-lg border border-zinc-300 px-3 py-1.5 text-xs hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-900"
+              className="inline-flex min-h-10 items-center rounded-lg border border-zinc-300 px-4 text-sm hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-900"
             >
               停止生成
             </button>
           ) : (
             <button
               onClick={() => void start()}
-              className="rounded-lg bg-zinc-900 px-3 py-1.5 text-xs text-white hover:opacity-90 dark:bg-white dark:text-black"
+              className="inline-flex min-h-10 items-center rounded-lg bg-zinc-900 px-4 text-sm text-white hover:opacity-90 dark:bg-white dark:text-black"
             >
               {text ? "重新生成" : "生成解读"}
             </button>
