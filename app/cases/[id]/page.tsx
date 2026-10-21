@@ -1,19 +1,26 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { calcTotals, getCase } from "@/lib/cases";
+import { SPACE_EMOJI, SPACE_GRADIENT } from "@/lib/constants";
 import InterpretPanel from "./InterpretPanel";
 import DeleteCaseButton from "./DeleteCaseButton";
 
 export const dynamic = "force-dynamic";
 
-function Section({ title, items }: { title: string; items: string[] }) {
+function Section({ title, emoji, items }: { title: string; emoji: string; items: string[] }) {
   if (!items.length) return null;
   return (
-    <section className="rounded-2xl border border-zinc-200 p-4 dark:border-zinc-800">
-      <h2 className="mb-2 text-sm font-semibold">{title}</h2>
-      <ul className="list-disc space-y-1 pl-5 text-sm text-zinc-600 dark:text-zinc-300">
+    <section className="card-surface p-4">
+      <h2 className="mb-2.5 flex items-center gap-1.5 text-[13px] font-semibold">
+        <span>{emoji}</span>
+        {title}
+      </h2>
+      <ul className="space-y-1.5 text-[13.5px] leading-6 text-zinc-600 dark:text-zinc-300">
         {items.map((t) => (
-          <li key={t}>{t}</li>
+          <li key={t} className="flex gap-2">
+            <span className="mt-[9px] h-1 w-1 shrink-0 rounded-full bg-[var(--muted)]" />
+            <span>{t}</span>
+          </li>
         ))}
       </ul>
     </section>
@@ -31,140 +38,181 @@ export default async function CaseDetailPage({
 
   const totals = calcTotals(item.fixtures, item.area_m2);
   const demo = process.env.DEMO_MODE === "1";
+  const fixtureCount = item.fixtures.reduce((s, f) => s + (Number(f.qty) || 0), 0);
 
   const specs: [string, string][] = [
-    ["场所类型", item.space_type],
-    ["项目年份", item.year ? `${item.year}` : "—"],
+    ["场所", item.space_type],
+    ["年份", item.year ? `${item.year}` : "—"],
     ["地区", item.region ?? "—"],
-    ["面积", item.area_m2 ? `${item.area_m2} ㎡` : "—"],
-    ["层高", item.floor_height_m ? `${item.floor_height_m} m` : "—"],
-    ["目标照度", item.target_lux ? `${item.target_lux} lx` : "—"],
-    ["预算区间", item.budget_range ?? "—"],
-    ["灯具数量", `${item.fixtures.reduce((s, f) => s + (Number(f.qty) || 0), 0)} 套`],
-    ["总功率（代码计算）", totals.total_w ? `${totals.total_w} W` : "—"],
-    ["功率密度 LPD（代码计算）", totals.lpd !== null ? `${totals.lpd} W/㎡` : "—"],
+    ["面积", item.area_m2 ? `${item.area_m2}㎡` : "—"],
+    ["层高", item.floor_height_m ? `${item.floor_height_m}m` : "—"],
+    ["目标照度", item.target_lux ? `${item.target_lux}lx` : "—"],
+    ["预算", item.budget_range ?? "—"],
+    ["灯具", `${fixtureCount} 套`],
+    ["总功率", totals.total_w ? `${totals.total_w}W` : "—"],
+    ["LPD", totals.lpd !== null ? `${totals.lpd}W/㎡` : "—"],
   ];
 
   return (
-    <main className="mx-auto w-full max-w-4xl px-4 py-8">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <Link href="/cases" className="text-sm text-zinc-500 underline underline-offset-4">
-          ← 返回案例列表
+    <main className="min-h-dvh">
+      {/* 封面（D6 换成相册轮播；现在用场所色渐变占位） */}
+      <div
+        className={`relative flex aspect-[4/3] w-full items-center justify-center bg-gradient-to-br sm:aspect-[21/9] ${
+          SPACE_GRADIENT[item.space_type] ?? "from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900"
+        }`}
+      >
+        <span className="text-6xl drop-shadow sm:text-7xl">{SPACE_EMOJI[item.space_type] ?? "📁"}</span>
+
+        <Link
+          href="/cases"
+          className="absolute left-3 top-3 inline-flex h-9 items-center gap-1 rounded-full bg-white/80 px-3 text-[13px] font-medium text-zinc-800 backdrop-blur dark:bg-black/50 dark:text-zinc-100"
+        >
+          ← 案例库
         </Link>
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-            {item.status} · {item.visibility}
+
+        <span className="absolute right-3 top-3 rounded-full bg-black/30 px-2.5 py-1 text-[11px] text-white backdrop-blur">
+          {item.space_type} · {item.year ?? "—"}
+        </span>
+
+        {demo && (
+          <span className="absolute bottom-3 left-3 rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-medium text-amber-700 backdrop-blur dark:bg-black/50 dark:text-amber-300">
+            只读演示版
           </span>
-          {demo ? (
-            <span className="rounded-full bg-amber-100 px-3 py-1 text-xs text-amber-700 dark:bg-amber-950 dark:text-amber-300">
-              只读演示版
-            </span>
-          ) : (
-            <>
-              <Link
-                href={`/cases/${item.id}/edit`}
-                className="inline-flex min-h-9 items-center rounded-lg border border-zinc-300 px-3 text-xs hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-900"
-              >
-                编辑
-              </Link>
-              <DeleteCaseButton id={item.id} title={item.title} />
-            </>
+        )}
+      </div>
+
+      {/* 内容浮到封面上，形成"卡片上浮"层次 */}
+      <div className="relative -mt-5 rounded-t-3xl bg-[var(--background)] px-4 pb-10 pt-4">
+        <div className="mx-auto w-full max-w-3xl">
+          <div className="flex items-start justify-between gap-3">
+            <h1 className="text-[19px] font-semibold leading-snug tracking-tight sm:text-2xl">{item.title}</h1>
+            {!demo && (
+              <div className="flex shrink-0 items-center gap-1.5 pt-1">
+                <Link
+                  href={`/cases/${item.id}/edit`}
+                  className="inline-flex min-h-8 items-center rounded-full bg-black/[0.05] px-3 text-[12px] dark:bg-white/[0.08]"
+                >
+                  编辑
+                </Link>
+                <DeleteCaseButton id={item.id} title={item.title} />
+              </div>
+            )}
+          </div>
+
+          <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] text-[var(--muted)]">
+            <span>📍 {item.region ?? "地区未填"}</span>
+            <span>·</span>
+            <span>{item.area_m2 ? `${item.area_m2}㎡` : "面积未填"}</span>
+            <span>·</span>
+            <span>{fixtureCount} 套灯具</span>
+            <span>·</span>
+            <span>{item.status}</span>
+          </div>
+
+          {item.tags.length > 0 && (
+            <div className="mt-2.5 flex flex-wrap gap-1.5">
+              {item.tags.map((t) => (
+                <span key={t} className="rounded-full bg-black/[0.04] px-2.5 py-1 text-[11.5px] text-[var(--muted)] dark:bg-white/[0.07]">
+                  #{t}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* 关键参数：两列小卡 */}
+          <dl className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-5">
+            {specs.map(([k, v]) => (
+              <div key={k} className="rounded-xl bg-black/[0.03] px-3 py-2 dark:bg-white/[0.05]">
+                <dt className="text-[10.5px] text-[var(--muted)]">{k}</dt>
+                <dd className="mt-0.5 truncate text-[13.5px] font-medium">{v}</dd>
+              </div>
+            ))}
+          </dl>
+
+          {/* 灯具清单 */}
+          <section className="card-surface mt-4 p-4">
+            <h2 className="mb-3 flex items-center justify-between text-[13px] font-semibold">
+              <span>💡 灯具清单</span>
+              <span className="text-[11px] font-normal text-[var(--muted)]">{fixtureCount} 套</span>
+            </h2>
+
+            {/* 手机：卡片 */}
+            <ul className="space-y-2 sm:hidden">
+              {item.fixtures.map((f, i) => (
+                <li key={i} className="rounded-xl bg-black/[0.03] p-3 dark:bg-white/[0.05]">
+                  <div className="flex items-baseline justify-between gap-2">
+                    <span className="text-[13.5px] font-medium">{f.type}</span>
+                    <span className="shrink-0 text-[13px] font-medium">
+                      {f.watt}W × {f.qty}
+                    </span>
+                  </div>
+                  <p className="mt-1 text-[11.5px] text-[var(--muted)]">
+                    {f.model ?? "型号未填"} · {f.lumen ?? "—"}lm · {f.cct ?? "—"}K · Ra{f.cri ?? "—"}
+                  </p>
+                  {f.layout && <p className="mt-0.5 text-[11.5px] text-[var(--muted)]">布置：{f.layout}</p>}
+                </li>
+              ))}
+            </ul>
+
+            {/* 桌面：表格 */}
+            <div className="hidden overflow-x-auto sm:block">
+              <table className="w-full text-left text-[13px]">
+                <thead className="text-[11px] text-[var(--muted)]">
+                  <tr>
+                    <th className="py-2 pr-3">类型</th>
+                    <th className="py-2 pr-3">型号</th>
+                    <th className="py-2 pr-3">功率</th>
+                    <th className="py-2 pr-3">光通量</th>
+                    <th className="py-2 pr-3">色温/CRI</th>
+                    <th className="py-2 pr-3">数量</th>
+                    <th className="py-2">布置</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {item.fixtures.map((f, i) => (
+                    <tr key={i} className="border-t border-black/[0.06] dark:border-white/[0.08]">
+                      <td className="py-2 pr-3">{f.type}</td>
+                      <td className="py-2 pr-3 text-[var(--muted)]">{f.model ?? "—"}</td>
+                      <td className="py-2 pr-3">{f.watt} W</td>
+                      <td className="py-2 pr-3 text-[var(--muted)]">{f.lumen ?? "—"} lm</td>
+                      <td className="py-2 pr-3 text-[var(--muted)]">
+                        {f.cct ?? "—"}K / Ra{f.cri ?? "—"}
+                      </td>
+                      <td className="py-2 pr-3">{f.qty}</td>
+                      <td className="py-2 text-[var(--muted)]">{f.layout ?? "—"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <p className="mt-3 text-[11px] text-[var(--muted)]">
+              总功率与 LPD 由代码从清单求和计算，不经过大模型——这是本项目的第一原则。
+            </p>
+          </section>
+
+          {/* 要点 */}
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            <Section title="设计要点" emoji="📐" items={item.design_points} />
+            <Section title="项目亮点" emoji="✨" items={item.highlights} />
+            <Section title="可复用点" emoji="🔁" items={item.reuse_points} />
+          </div>
+
+          {/* AI 解读 */}
+          <div className="mt-4">
+            <InterpretPanel caseId={item.id} demo={demo} />
+          </div>
+
+          {item.raw_text && (
+            <details className="card-surface mt-4 p-4">
+              <summary className="cursor-pointer text-[13px] font-semibold">📄 原始资料（已脱敏）</summary>
+              <p className="mt-3 whitespace-pre-wrap text-[13px] leading-6 text-zinc-600 dark:text-zinc-300">
+                {item.raw_text}
+              </p>
+            </details>
           )}
         </div>
       </div>
-
-      <h1 className="text-xl font-semibold sm:text-2xl">{item.title}</h1>
-      <div className="mt-2 flex flex-wrap gap-1">
-        {item.tags.map((t) => (
-          <span key={t} className="rounded bg-zinc-100 px-2 py-0.5 text-[11px] text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-            {t}
-          </span>
-        ))}
-      </div>
-
-      {/* 关键参数 */}
-      <dl className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
-        {specs.map(([k, v]) => (
-          <div key={k} className="rounded-xl border border-zinc-200 p-3 dark:border-zinc-800">
-            <dt className="text-[11px] text-zinc-500">{k}</dt>
-            <dd className="mt-1 text-sm font-medium">{v}</dd>
-          </div>
-        ))}
-      </dl>
-
-      {/* 灯具清单：桌面用表格，手机用卡片（表格横滚在手机上很难读） */}
-      <section className="mt-6 rounded-2xl border border-zinc-200 p-4 dark:border-zinc-800">
-        <h2 className="mb-3 text-sm font-semibold">灯具清单</h2>
-
-        {/* 手机：卡片 */}
-        <ul className="space-y-2 sm:hidden">
-          {item.fixtures.map((f, i) => (
-            <li key={i} className="rounded-xl bg-zinc-50 p-3 dark:bg-zinc-900">
-              <div className="flex items-baseline justify-between gap-2">
-                <span className="text-sm font-medium">{f.type}</span>
-                <span className="shrink-0 text-sm font-medium">
-                  {f.watt}W × {f.qty}
-                </span>
-              </div>
-              <p className="mt-1 text-xs text-zinc-500">
-                {f.model ?? "型号未填"} · {f.lumen ?? "—"}lm · {f.cct ?? "—"}K · Ra{f.cri ?? "—"}
-              </p>
-              {f.layout && <p className="mt-1 text-xs text-zinc-500">布置：{f.layout}</p>}
-            </li>
-          ))}
-        </ul>
-
-        {/* 桌面：表格 */}
-        <div className="hidden overflow-x-auto sm:block">
-          <table className="w-full text-left text-sm">
-            <thead className="text-xs text-zinc-500">
-              <tr>
-                <th className="py-2 pr-3">类型</th>
-                <th className="py-2 pr-3">型号</th>
-                <th className="py-2 pr-3">功率</th>
-                <th className="py-2 pr-3">光通量</th>
-                <th className="py-2 pr-3">色温/CRI</th>
-                <th className="py-2 pr-3">数量</th>
-                <th className="py-2">布置</th>
-              </tr>
-            </thead>
-            <tbody>
-              {item.fixtures.map((f, i) => (
-                <tr key={i} className="border-t border-zinc-100 dark:border-zinc-800">
-                  <td className="py-2 pr-3">{f.type}</td>
-                  <td className="py-2 pr-3 text-zinc-500">{f.model ?? "—"}</td>
-                  <td className="py-2 pr-3">{f.watt} W</td>
-                  <td className="py-2 pr-3 text-zinc-500">{f.lumen ?? "—"} lm</td>
-                  <td className="py-2 pr-3 text-zinc-500">
-                    {f.cct ?? "—"}K / Ra{f.cri ?? "—"}
-                  </td>
-                  <td className="py-2 pr-3">{f.qty}</td>
-                  <td className="py-2 text-zinc-500">{f.layout ?? "—"}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <p className="mt-3 text-xs text-zinc-400">
-          总功率与 LPD 由代码从清单求和计算，不经过大模型——这是本项目的第一原则。
-        </p>
-      </section>
-
-      <div className="mt-6 grid gap-4 sm:grid-cols-2">
-        <Section title="设计要点" items={item.design_points} />
-        <Section title="项目亮点" items={item.highlights} />
-        <Section title="可复用点" items={item.reuse_points} />
-      </div>
-
-      {/* AI 解读：客户端组件，走 /api/interpret 的 SSE 流 */}
-      <InterpretPanel caseId={item.id} demo={demo} />
-
-      {item.raw_text && (
-        <details className="mt-6 rounded-2xl border border-zinc-200 p-4 dark:border-zinc-800">
-          <summary className="cursor-pointer text-sm font-semibold">原始资料（已脱敏）</summary>
-          <p className="mt-3 whitespace-pre-wrap text-sm text-zinc-600 dark:text-zinc-300">{item.raw_text}</p>
-        </details>
-      )}
     </main>
   );
 }

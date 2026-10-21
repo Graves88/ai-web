@@ -12,6 +12,60 @@ const PHASE_TEXT: Record<Phase, string> = {
   error: "",
 };
 
+/** 极简 Markdown：只处理 ## 标题、- 列表、**粗体**（够用就好，不引依赖） */
+function renderInline(s: string, keyPrefix: string) {
+  return s.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
+    part.startsWith("**") && part.endsWith("**") ? (
+      <strong key={`${keyPrefix}-${i}`} className="font-semibold">
+        {part.slice(2, -2)}
+      </strong>
+    ) : (
+      <span key={`${keyPrefix}-${i}`}>{part}</span>
+    ),
+  );
+}
+
+function renderMarkdown(text: string) {
+  const out: React.ReactNode[] = [];
+  let bullets: string[] = [];
+  const flush = (key: string) => {
+    if (!bullets.length) return;
+    out.push(
+      <ul key={key} className="list-disc space-y-1 pl-5 marker:text-[var(--muted)]">
+        {bullets.map((b, i) => (
+          <li key={i}>{renderInline(b, `${key}-${i}`)}</li>
+        ))}
+      </ul>,
+    );
+    bullets = [];
+  };
+
+  text.split("\n").forEach((line, idx) => {
+    const t = line.trim();
+    if (!t) {
+      flush(`b${idx}`);
+      return;
+    }
+    if (/^#{1,3}\s/.test(t)) {
+      flush(`b${idx}`);
+      out.push(
+        <h3 key={`h${idx}`} className="mt-3 text-[13.5px] font-semibold text-[var(--foreground)] first:mt-0">
+          {renderInline(t.replace(/^#{1,3}\s/, ""), `h${idx}`)}
+        </h3>,
+      );
+      return;
+    }
+    if (/^[-*]\s/.test(t)) {
+      bullets.push(t.slice(2));
+      return;
+    }
+    flush(`b${idx}`);
+    out.push(<p key={`p${idx}`}>{renderInline(t, `p${idx}`)}</p>);
+  });
+  flush("b-end");
+  return out;
+}
+
 export default function InterpretPanel({ caseId, demo = false }: { caseId: number; demo?: boolean }) {
   const [text, setText] = useState("");
   const [phase, setPhase] = useState<Phase>("idle");
@@ -95,21 +149,23 @@ export default function InterpretPanel({ caseId, demo = false }: { caseId: numbe
   const busy = phase === "loading";
 
   return (
-    <section className="mt-6 rounded-2xl border border-zinc-200 p-4 dark:border-zinc-800">
+    <section className="card-surface p-4">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-sm font-semibold">AI 解读</h2>
+        <h2 className="flex items-center gap-1.5 text-[13px] font-semibold">
+          <span>🤖</span> AI 解读
+        </h2>
         <div className="flex items-center gap-2">
           {busy ? (
             <button
               onClick={stop}
-              className="inline-flex min-h-10 items-center rounded-lg border border-zinc-300 px-4 text-sm hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-900"
+              className="inline-flex min-h-9 items-center rounded-full bg-black/[0.05] px-3.5 text-[12.5px] font-medium dark:bg-white/[0.08]"
             >
               停止生成
             </button>
           ) : (
             <button
               onClick={() => void start()}
-              className="inline-flex min-h-10 items-center rounded-lg bg-zinc-900 px-4 text-sm text-white hover:opacity-90 dark:bg-white dark:text-black"
+              className="inline-flex min-h-9 items-center rounded-full bg-[var(--foreground)] px-4 text-[12.5px] font-medium text-[var(--background)]"
             >
               {text ? "重新生成" : "生成解读"}
             </button>
@@ -118,19 +174,22 @@ export default function InterpretPanel({ caseId, demo = false }: { caseId: numbe
       </div>
 
       {text ? (
-        <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-zinc-700 dark:text-zinc-200">{text}</p>
+        <div className="mt-3.5 space-y-2.5 text-[13.5px] leading-6 text-zinc-700 dark:text-zinc-200">
+          {renderMarkdown(text)}
+          {busy && <span className="ml-0.5 inline-block h-4 w-[2px] animate-pulse bg-current align-middle" />}
+        </div>
       ) : (
-        <p className="mt-3 text-sm text-zinc-500">
+        <p className="mt-3 text-[13px] leading-6 text-[var(--muted)]">
           点「生成解读」：模型会基于本案例资料输出「亮点 / 适用场景 / 可复用建议」，要求引用原文参数、不许编造。
         </p>
       )}
 
-      <div className="mt-2 flex items-center justify-between text-xs text-zinc-400">
+      <div className="mt-2.5 flex items-center justify-between text-[11px] text-[var(--muted)]">
         <span>{phase === "error" ? "" : PHASE_TEXT[phase]}</span>
         <span>{demo ? "演示：预生成解读（不调模型）" : "prompt v1 · 流式输出"}</span>
       </div>
       {error && (
-        <p className="mt-2 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700 dark:bg-red-950 dark:text-red-300">
+        <p className="mt-2 rounded-lg bg-red-50 px-3 py-2 text-[12px] text-red-700 dark:bg-red-950 dark:text-red-300">
           {error}
         </p>
       )}

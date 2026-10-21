@@ -1,19 +1,28 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f7f5f2; /* 暖白纸感底色，比纯白更"杂志" */
+  --background-soft: rgba(247, 245, 242, 0.86);
+  --foreground: #1c1917;
+  --card: #ffffff;
+  --muted: #78716c;
+  --accent: #ea580c;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #0b0b0c;
+    --background-soft: rgba(11, 11, 12, 0.86);
     --foreground: #ededed;
+    --card: #161618;
+    --muted: #a1a1aa;
+    --accent: #fb923c;
   }
 }
 
@@ -38,6 +47,24 @@ body {
   select {
     font-size: 16px;
   }
+}
+
+/* 卡片：柔和阴影 + 极淡描边，比纯 border 更"轻" */
+.card-surface {
+  background: var(--card);
+  border-radius: 1.125rem;
+  box-shadow:
+    0 1px 2px rgba(28, 25, 23, 0.04),
+    0 8px 24px -12px rgba(28, 25, 23, 0.12);
+}
+
+/* 横向频道条：隐藏滚动条但保留滚动 */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 /* 流式输出时让内容不跳动 */
