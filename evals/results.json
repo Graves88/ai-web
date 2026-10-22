@@ -1,0 +1,227 @@
+{
+  "generatedAt": "2026-10-22T12:32:14.993Z",
+  "model": "deepseek-chat",
+  "scoreOnly": true,
+  "summary": [
+    {
+      "version": "v1",
+      "n": 10,
+      "structRate": 1,
+      "paramHit": 0.695,
+      "fabricationRate": 0,
+      "avgFabrications": 0,
+      "avgChars": 286
+    },
+    {
+      "version": "v2",
+      "n": 10,
+      "structRate": 1,
+      "paramHit": 0.8550000000000001,
+      "fabricationRate": 0,
+      "avgFabrications": 0,
+      "avgChars": 350
+    }
+  ],
+  "rows": [
+    {
+      "case": 1,
+      "version": "v1",
+      "structOk": true,
+      "hit": 3,
+      "expected": 5,
+      "fabrications": 0,
+      "chars": 309,
+      "tokens": 0
+    },
+    {
+      "case": 1,
+      "version": "v2",
+      "structOk": true,
+      "hit": 4,
+      "expected": 5,
+      "fabrications": 0,
+      "chars": 407,
+      "tokens": 0
+    },
+    {
+      "case": 2,
+      "version": "v1",
+      "structOk": true,
+      "hit": 0,
+      "expected": 5,
+      "fabrications": 0,
+      "chars": 232,
+      "tokens": 0
+    },
+    {
+      "case": 2,
+      "version": "v2",
+      "structOk": true,
+      "hit": 4,
+      "expected": 5,
+      "fabrications": 0,
+      "chars": 309,
+      "tokens": 0
+    },
+    {
+      "case": 3,
+      "version": "v1",
+      "structOk": true,
+      "hit": 3,
+      "expected": 5,
+      "fabrications": 0,
+      "chars": 264,
+      "tokens": 0
+    },
+    {
+      "case": 3,
+      "version": "v2",
+      "structOk": true,
+      "hit": 5,
+      "expected": 5,
+      "fabrications": 0,
+      "chars": 341,
+      "tokens": 0
+    },
+    {
+      "case": 4,
+      "version": "v1",
+      "structOk": true,
+      "hit": 5,
+      "expected": 5,
+      "fabrications": 0,
+      "chars": 283,
+      "tokens": 0
+    },
+    {
+      "case": 4,
+      "version": "v2",
+      "structOk": true,
+      "hit": 5,
+      "expected": 5,
+      "fabrications": 0,
+      "chars": 301,
+      "tokens": 0
+    },
+    {
+      "case": 5,
+      "version": "v1",
+      "structOk": true,
+      "hit": 4,
+      "expected": 5,
+      "fabrications": 0,
+      "chars": 291,
+      "tokens": 0
+    },
+    {
+      "case": 5,
+      "version": "v2",
+      "structOk": true,
+      "hit": 4,
+      "expected": 5,
+      "fabrications": 0,
+      "chars": 319,
+      "tokens": 0
+    },
+    {
+      "case": 6,
+      "version": "v1",
+      "structOk": true,
+      "hit": 4,
+      "expected": 5,
+      "fabrications": 0,
+      "chars": 337,
+      "tokens": 0
+    },
+    {
+      "case": 6,
+      "version": "v2",
+      "structOk": true,
+      "hit": 4,
+      "expected": 5,
+      "fabrications": 0,
+      "chars": 319,
+      "tokens": 0
+    },
+    {
+      "case": 7,
+      "version": "v1",
+      "structOk": true,
+      "hit": 3,
+      "expected": 4,
+      "fabrications": 0,
+      "chars": 291,
+      "tokens": 0
+    },
+    {
+      "case": 7,
+      "version": "v2",
+      "structOk": true,
+      "hit": 3,
+      "expected": 4,
+      "fabrications": 0,
+      "chars": 393,
+      "tokens": 0
+    },
+    {
+      "case": 8,
+      "version": "v1",
+      "structOk": true,
+      "hit": 4,
+      "expected": 5,
+      "fabrications": 0,
+      "chars": 324,
+      "tokens": 0
+    },
+    {
+      "case": 8,
+      "version": "v2",
+      "structOk": true,
+      "hit": 4,
+      "expected": 5,
+      "fabrications": 0,
+      "chars": 402,
+      "tokens": 0
+    },
+    {
+      "case": 9,
+      "version": "v1",
+      "structOk": true,
+      "hit": 3,
+      "expected": 5,
+      "fabrications": 0,
+      "chars": 243,
+      "tokens": 0
+    },
+    {
+      "case": 9,
+      "version": "v2",
+      "structOk": true,
+      "hit": 4,
+      "expected": 5,
+      "fabrications": 0,
+      "chars": 376,
+      "tokens": 0
+    },
+    {
+      "case": 10,
+      "version": "v1",
+      "structOk": true,
+      "hit": 5,
+      "expected": 5,
+      "fabrications": 0,
+      "chars": 287,
+      "tokens": 0
+    },
+    {
+      "case": 10,
+      "version": "v2",
+      "structOk": true,
+      "hit": 5,
+      "expected": 5,
+      "fabrications": 0,
+      "chars": 333,
+      "tokens": 0
+    }
+  ]
+}

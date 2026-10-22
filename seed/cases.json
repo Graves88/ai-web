@@ -12,7 +12,7 @@
         "type": "合III射灯",
         "model": "合III",
         "watt": 7,
-        "lumen": 620,
+        "lumen": 616,
         "cct": 3000,
         "cri": 90,
         "qty": 48,
@@ -22,7 +22,7 @@
         "type": "LED灯带",
         "model": "虹昀SCOB",
         "watt": 8,
-        "lumen": 760,
+        "lumen": 704,
         "cct": 3000,
         "cri": 90,
         "qty": 40,
@@ -31,9 +31,9 @@
     ],
     "budget_range": "不便公开",
     "design_points": [
-      "全屋无主灯设计，用射灯 + 灯带做层次",
+      "全屋无主灯设计，射灯 + 灯带做层次",
       "以氛围照明为主，弱化顶部光源",
-      "灯具数量按同类大平层估算，待校对"
+      "灯具数量与功率按面积/功率密度反推，待校对"
     ],
     "highlights": [
       "高显色光环境，还原软装与材质质感",
@@ -43,13 +43,14 @@
       "大平层无主灯：射灯负责功能、灯带负责氛围",
       "先定色温纪律（全屋 3000K）再定灯具"
     ],
-    "raw_text": "某大平层（约 150㎡）全屋智能照明，无主灯方案，以射灯与低位灯带为主，高显色需求。",
+    "raw_text": "",
     "status": "已确认",
     "visibility": "public",
     "tags": [
       "大平层",
       "无主灯",
-      "氛围照明"
+      "氛围照明",
+      "高显色"
     ],
     "cover": "/demo/cases/01-1.jpg",
     "media": [
@@ -78,56 +79,57 @@
     "hasRealPhotos": true
   },
   {
-    "title": "某写字楼大堂照明（示例）",
-    "space_type": "办公",
-    "year": 2023,
-    "region": "杭州",
-    "area_m2": 180,
-    "floor_height_m": 4.2,
-    "target_lux": 300,
+    "title": "北投印象住宅智能照明",
+    "space_type": "住宅",
+    "year": 2026,
+    "region": "南宁",
+    "area_m2": 132,
+    "floor_height_m": 2.7,
+    "target_lux": 200,
     "fixtures": [
       {
-        "type": "LED筒灯",
-        "model": "DL-12W-40K",
-        "watt": 12,
-        "lumen": 1200,
-        "cct": 4000,
-        "cri": 85,
-        "qty": 36,
-        "layout": "大堂吊顶 1.5m 网格"
+        "type": "星II射灯",
+        "model": "星II",
+        "watt": 7,
+        "lumen": 616,
+        "cct": 3000,
+        "cri": 90,
+        "qty": 50,
+        "layout": "客餐厅/卧室重点照明"
       },
       {
-        "type": "线性灯",
-        "model": "LN-20W-40K",
-        "watt": 20,
-        "lumen": 1900,
-        "cct": 4000,
-        "cri": 85,
-        "qty": 18,
-        "layout": "前台背景与电梯厅线条"
+        "type": "智能灯带",
+        "model": "虹昀V",
+        "watt": 8,
+        "lumen": 704,
+        "cct": 3000,
+        "cri": 90,
+        "qty": 38,
+        "layout": "天花/柜体低位氛围"
       }
     ],
-    "budget_range": "6-10 万",
+    "budget_range": "不便公开",
     "design_points": [
-      "层高 4.2m 需控制 UGR",
-      "前台重点照明与背景洗墙分离",
-      "分回路预留调光"
+      "全屋无主灯",
+      "中古风软装搭配，灯光偏暖",
+      "灯具数量与功率按面积/功率密度反推，待校对"
     ],
     "highlights": [
-      "大堂平均照度 320lx，UGR<19",
-      "线性灯勾勒建筑线条"
+      "全屋智能控制",
+      "中古风空间以低位灯带营造包裹感"
     ],
     "reuse_points": [
-      "层高 >4m 的大堂优先用筒灯 + 线性灯组合",
-      "UGR 控制是办公空间验收重点"
+      "中古风搭配暖光（2700-3000K）更出效果",
+      "低位灯带 + 重点射灯是无主灯的通用组合"
     ],
-    "raw_text": "示例脱敏资料：写字楼首层大堂照明设计，层高 4.2 米，要求 UGR 低于 19，含调光回路。",
+    "raw_text": "",
     "status": "已确认",
     "visibility": "public",
     "tags": [
-      "办公",
-      "大堂",
-      "UGR"
+      "住宅",
+      "无主灯",
+      "中古风",
+      "全屋智能"
     ],
     "cover": "/demo/cases/02-1.jpg",
     "media": [
@@ -150,46 +152,76 @@
     "hasRealPhotos": true
   },
   {
-    "title": "某中学教室照明改造（示例）",
-    "space_type": "教育",
-    "year": 2025,
-    "region": "南宁",
-    "area_m2": 65,
-    "floor_height_m": 3,
-    "target_lux": 300,
+    "title": "碧桂园住宅全屋智能照明",
+    "space_type": "住宅",
+    "year": 2026,
+    "region": "玉林",
+    "area_m2": 121,
+    "floor_height_m": 2.8,
+    "target_lux": 200,
     "fixtures": [
       {
-        "type": "教室专用灯盘",
-        "model": "CL-36W-50K",
-        "watt": 36,
-        "lumen": 3400,
-        "cct": 5000,
+        "type": "合III射灯",
+        "model": "合III",
+        "watt": 7,
+        "lumen": 616,
+        "cct": 3000,
         "cri": 90,
-        "qty": 9,
-        "layout": "黑板区 3 盏、课桌区 6 盏"
+        "qty": 40,
+        "layout": "客餐厅重点照明"
+      },
+      {
+        "type": "天境线性灯",
+        "model": "天境",
+        "watt": 12,
+        "lumen": 1056,
+        "cct": 3000,
+        "cri": 90,
+        "qty": 10,
+        "layout": "天花线条"
+      },
+      {
+        "type": "静晓筒灯",
+        "model": "静晓",
+        "watt": 9,
+        "lumen": 792,
+        "cct": 3000,
+        "cri": 90,
+        "qty": 15,
+        "layout": "过道/厨房基础照明"
+      },
+      {
+        "type": "和风风扇灯",
+        "model": "和风",
+        "watt": 30,
+        "lumen": 2640,
+        "cct": 3000,
+        "cri": 90,
+        "qty": 2,
+        "layout": "卧室/餐厅"
       }
     ],
-    "budget_range": "1-2 万",
+    "budget_range": "不便公开",
     "design_points": [
-      "课桌面维持平均照度 ≥300lx、照度均匀度 ≥0.7",
-      "黑板局部照明 ≥500lx",
-      "眩光值 UGR ≤19"
+      "全屋智能控制",
+      "多种灯具混搭：射灯/线性灯/筒灯/风扇灯",
+      "灯具数量与功率按面积/功率密度反推，待校对"
     ],
     "highlights": [
-      "改造后频闪消除、护眼达标",
-      "照度均匀度 0.75"
+      "全屋智能联动",
+      "风扇灯兼顾照明与空气循环"
     ],
     "reuse_points": [
-      "教育照明必须看照度均匀度和 UGR，不只是平均照度",
-      "黑板灯需单独一路"
+      "风扇灯适合卧室/餐厅，一灯两用",
+      "线性灯做天花线条能拉长空间比例"
     ],
-    "raw_text": "示例脱敏资料：某中学 2 间教室照明改造，按国家教室照明标准设计，含黑板灯独立控制。",
+    "raw_text": "",
     "status": "已确认",
     "visibility": "public",
     "tags": [
-      "教育",
-      "教室",
-      "护眼"
+      "住宅",
+      "全屋智能",
+      "混搭灯具"
     ],
     "cover": "/demo/cases/03-1.jpg",
     "media": [
@@ -217,56 +249,77 @@
     "hasRealPhotos": true
   },
   {
-    "title": "某商场中庭照明（示例）",
-    "space_type": "商业",
-    "year": 2024,
-    "region": "长沙",
-    "area_m2": 400,
-    "floor_height_m": 12,
-    "target_lux": 500,
+    "title": "五象院子别墅智能照明",
+    "space_type": "住宅",
+    "year": 2026,
+    "region": "南宁",
+    "area_m2": 372,
+    "floor_height_m": 2.7,
+    "target_lux": 200,
     "fixtures": [
       {
-        "type": "LED投光灯",
-        "model": "FL-150W-40K",
-        "watt": 150,
-        "lumen": 15000,
-        "cct": 4000,
-        "cri": 80,
-        "qty": 12,
-        "layout": "中庭顶部马道向下投射"
+        "type": "CX20轨道灯",
+        "model": "CX20",
+        "watt": 12,
+        "lumen": 1056,
+        "cct": 3000,
+        "cri": 90,
+        "qty": 40,
+        "layout": "客餐厅/挑空区轨道布灯"
       },
       {
-        "type": "线性洗墙灯",
-        "model": "WL-24W-40K",
-        "watt": 24,
-        "lumen": 2200,
-        "cct": 4000,
-        "cri": 80,
-        "qty": 40,
-        "layout": "四周栏板洗墙"
+        "type": "合III射灯",
+        "model": "合III",
+        "watt": 7,
+        "lumen": 616,
+        "cct": 3000,
+        "cri": 90,
+        "qty": 60,
+        "layout": "卧室/过道重点照明"
+      },
+      {
+        "type": "LED灯带",
+        "model": "虹昀SCOB",
+        "watt": 8,
+        "lumen": 704,
+        "cct": 3000,
+        "cri": 90,
+        "qty": 70,
+        "layout": "天花暗槽/楼梯踏步"
+      },
+      {
+        "type": "光帘",
+        "model": "光帘",
+        "watt": 10,
+        "lumen": 880,
+        "cct": 3000,
+        "cri": 90,
+        "qty": 30,
+        "layout": "窗帘盒/氛围洗光"
       }
     ],
-    "budget_range": "15-25 万",
+    "budget_range": "不便公开",
     "design_points": [
-      "高空间投光需计算维护系数",
-      "洗墙灯与栏板间距影响均匀度",
-      "预留节假日灯光场景"
+      "别墅多层空间，轨道灯 + 灯带 + 光帘组合",
+      "主灯以智能控制为主",
+      "灯具数量与功率按面积/功率密度反推，待校对"
     ],
     "highlights": [
-      "中庭地面照度 520lx",
-      "栏板洗墙均匀无暗区"
+      "主灯智能控制",
+      "光帘做氛围洗光，与窗帘联动"
     ],
     "reuse_points": [
-      "12m 以上高空间用投光灯而非筒灯",
-      "商业空间要预留场景/节日模式"
+      "别墅挑空区用轨道灯更好调角度",
+      "光帘与窗帘一体，氛围感强且施工干净"
     ],
-    "raw_text": "示例脱敏资料：商业综合体中庭照明，挑高 12 米，需同时满足日常与节假日场景。",
+    "raw_text": "",
     "status": "已确认",
     "visibility": "public",
     "tags": [
-      "商业",
-      "中庭",
-      "高空间"
+      "别墅",
+      "轨道灯",
+      "主灯智能",
+      "光帘"
     ],
     "cover": "/demo/cases/04-1.jpg",
     "media": [
@@ -301,7 +354,7 @@
         "type": "合III射灯",
         "model": "合III",
         "watt": 7,
-        "lumen": 620,
+        "lumen": 616,
         "cct": 3000,
         "cri": 90,
         "qty": 50,
@@ -311,11 +364,31 @@
         "type": "虹昀SCOB灯带",
         "model": "虹昀SCOB",
         "watt": 8,
-        "lumen": 760,
+        "lumen": 704,
         "cct": 3000,
         "cri": 90,
         "qty": 60,
         "layout": "天花/柜体低位氛围"
+      },
+      {
+        "type": "晶竹射灯",
+        "model": "晶竹",
+        "watt": 6,
+        "lumen": 528,
+        "cct": 3000,
+        "cri": 90,
+        "qty": 16,
+        "layout": "局部重点/洗墙"
+      },
+      {
+        "type": "光华筒灯",
+        "model": "光华",
+        "watt": 9,
+        "lumen": 792,
+        "cct": 3000,
+        "cri": 90,
+        "qty": 12,
+        "layout": "过道基础照明"
       },
       {
         "type": "智能开关",
@@ -329,7 +402,7 @@
     "design_points": [
       "无主灯设计，低位氛围照明为主",
       "INNO 智能开关做全屋场景控制",
-      "灯具数量按同类项目估算，待校对"
+      "灯具数量与功率按面积/功率密度反推，待校对"
     ],
     "highlights": [
       "全屋智能联动",
@@ -339,13 +412,14 @@
       "全屋智能先从开关与回路规划开始",
       "低位照明是提升质感性价比最高的一招"
     ],
-    "raw_text": "某大平层（约 154㎡）全屋智能照明：合III 射灯 + 虹昀 SCOB 灯带 + INNO 智能开关，无主灯、低位氛围为主。",
+    "raw_text": "",
     "status": "已确认",
     "visibility": "public",
     "tags": [
       "大平层",
       "全屋智能",
-      "无主灯"
+      "无主灯",
+      "低位照明"
     ],
     "cover": "/demo/cases/05-1.jpg",
     "media": [
@@ -373,66 +447,66 @@
     "hasRealPhotos": true
   },
   {
-    "title": "某酒店客房照明（示例）",
-    "space_type": "商业",
-    "year": 2023,
-    "region": "三亚",
-    "area_m2": 28,
+    "title": "上水湾住宅轻智能照明",
+    "space_type": "住宅",
+    "year": 2026,
+    "region": "南宁",
+    "area_m2": 134,
     "floor_height_m": 2.8,
-    "target_lux": 150,
+    "target_lux": 200,
     "fixtures": [
       {
-        "type": "LED筒灯",
-        "model": "DL-6W-30K",
-        "watt": 6,
-        "lumen": 520,
+        "type": "CX20轨道灯",
+        "model": "CX20",
+        "watt": 12,
+        "lumen": 1056,
         "cct": 3000,
         "cri": 90,
-        "qty": 8,
-        "layout": "玄关/卫生间/过道"
+        "qty": 20,
+        "layout": "客餐厅轨道布灯"
       },
       {
-        "type": "床头壁灯",
-        "model": "WL-5W-27K",
-        "watt": 5,
-        "lumen": 400,
-        "cct": 2700,
-        "cri": 90,
-        "qty": 2,
-        "layout": "床头两侧"
-      },
-      {
-        "type": "LED灯带",
-        "model": "ST-6W-m",
-        "watt": 6,
-        "lumen": 540,
+        "type": "合III射灯",
+        "model": "合III",
+        "watt": 7,
+        "lumen": 616,
         "cct": 3000,
         "cri": 90,
-        "qty": 12,
-        "layout": "窗帘盒/床头背景"
+        "qty": 30,
+        "layout": "卧室/过道"
+      },
+      {
+        "type": "虹昀SCOB灯带",
+        "model": "虹昀SCOB",
+        "watt": 8,
+        "lumen": 704,
+        "cct": 3000,
+        "cri": 90,
+        "qty": 28,
+        "layout": "天花暗槽"
       }
     ],
-    "budget_range": "0.8-1.5 万/间",
+    "budget_range": "不便公开",
     "design_points": [
-      "阅读灯与氛围灯分层",
-      "总控/夜灯/阅读三场景",
-      "防眩光，避免直射床头"
+      "轻智能：保留手动回路 + 关键场景",
+      "轨道灯承担可调角度重点照明",
+      "灯具数量与功率按面积/功率密度反推，待校对"
     ],
     "highlights": [
-      "客房光环境获业主好评",
-      "夜灯模式功耗 <3W"
+      "轻智能配置",
+      "轨道灯 + 灯带的组合，后期调整灵活"
     ],
     "reuse_points": [
-      "客房照明按「氛围-功能-阅读」三层设计",
-      "夜灯单独回路是好评点"
+      "预算有限时先做轻智能：回路 + 场景就够用",
+      "轨道灯适合后期想改布光的空间"
     ],
-    "raw_text": "示例脱敏资料：度假酒店客房照明，28 平米，要求三场景控制与低眩光。",
+    "raw_text": "",
     "status": "已确认",
     "visibility": "public",
     "tags": [
-      "商业",
-      "酒店",
-      "客房"
+      "住宅",
+      "轻智能",
+      "轨道灯"
     ],
     "cover": "/demo/cases/06-1.jpg",
     "media": [
@@ -455,46 +529,66 @@
     "hasRealPhotos": true
   },
   {
-    "title": "某市政道路照明（示例）",
-    "space_type": "道路",
-    "year": 2022,
-    "region": "柳州",
-    "area_m2": null,
-    "floor_height_m": null,
-    "target_lux": 20,
+    "title": "澜铂湾住宅全屋智能照明",
+    "space_type": "住宅",
+    "year": 2026,
+    "region": "横州",
+    "area_m2": 124,
+    "floor_height_m": 2.8,
+    "target_lux": 200,
     "fixtures": [
       {
-        "type": "LED路灯",
-        "model": "SL-120W-40K",
-        "watt": 120,
-        "lumen": 14000,
-        "cct": 4000,
-        "cri": 70,
-        "qty": 86,
-        "layout": "双向对称布灯，杆距 30m，杆高 10m"
+        "type": "CX20轨道灯",
+        "model": "CX20",
+        "watt": 12,
+        "lumen": 1056,
+        "cct": 3000,
+        "cri": 90,
+        "qty": 18,
+        "layout": "客餐厅轨道布灯"
+      },
+      {
+        "type": "星II圆弧杯射灯",
+        "model": "星II",
+        "watt": 7,
+        "lumen": 616,
+        "cct": 3000,
+        "cri": 90,
+        "qty": 32,
+        "layout": "卧室/过道重点照明"
+      },
+      {
+        "type": "虹昀SCOB灯带",
+        "model": "虹昀SCOB",
+        "watt": 8,
+        "lumen": 704,
+        "cct": 3000,
+        "cri": 90,
+        "qty": 22,
+        "layout": "天花暗槽/低位氛围"
       }
     ],
-    "budget_range": "60-90 万",
+    "budget_range": "不便公开",
     "design_points": [
-      "按道路等级选平均照度与均匀度",
-      "功率密度 LPD 需满足规范限值",
-      "半夜降功率节能"
+      "全屋智能 + 无主灯",
+      "圆弧杯射灯做柔和重点光",
+      "灯具数量与功率按面积/功率密度反推，待校对"
     ],
     "highlights": [
-      "平均照度 22lx，均匀度 0.4",
-      "后半夜降功率 50%"
+      "全屋智能",
+      "圆弧杯射灯出光柔和、不刺眼"
     ],
     "reuse_points": [
-      "道路照明看均匀度而非只看照度",
-      "降功率策略是市政项目常见得分点"
+      "圆弧杯射灯比普通射灯更柔和，适合卧室",
+      "无主灯方案先算功率密度再定灯数"
     ],
-    "raw_text": "示例脱敏资料：市政道路照明改造，双向四车道，杆距 30 米，含单灯控制与降功率。",
+    "raw_text": "",
     "status": "已确认",
     "visibility": "public",
     "tags": [
-      "道路",
-      "市政",
-      "节能"
+      "住宅",
+      "全屋智能",
+      "无主灯"
     ],
     "cover": "/demo/cases/07-1.jpg",
     "media": [
@@ -529,7 +623,7 @@
         "type": "合III射灯",
         "model": "合III",
         "watt": 6,
-        "lumen": 520,
+        "lumen": 528,
         "cct": 2700,
         "cri": 90,
         "qty": 8,
@@ -539,7 +633,7 @@
         "type": "虹昀SCOB灯带",
         "model": "虹昀SCOB",
         "watt": 6,
-        "lumen": 560,
+        "lumen": 528,
         "cct": 2700,
         "cri": 90,
         "qty": 20,
@@ -549,6 +643,9 @@
         "type": "户外洗墙灯",
         "model": "—",
         "watt": 12,
+        "lumen": 1056,
+        "cct": 2700,
+        "cri": 80,
         "qty": 4,
         "layout": "外立面亮化/轮廓勾勒"
       }
@@ -557,7 +654,7 @@
     "design_points": [
       "舱内以氛围为主，灯带勾勒流线造型",
       "外立面做轮廓亮化，夜间识别度高",
-      "灯具数量为估算，待校对"
+      "灯具数量与功率按面积/功率密度反推，待校对"
     ],
     "highlights": [
       "全屋灯带做造型照明",
@@ -567,7 +664,7 @@
       "异形空间用灯带贴造型走，比布点更出效果",
       "文旅项目外立面亮化与内装要同一套色温"
     ],
-    "raw_text": "某文旅营地太空舱单元（约 30㎡）：舱内合III 射灯 + 虹昀 SCOB 灯带，配致臻智能开关；外立面做户外亮化。",
+    "raw_text": "",
     "status": "已确认",
     "visibility": "public",
     "tags": [
@@ -601,56 +698,66 @@
     "hasRealPhotos": true
   },
   {
-    "title": "某广场夜景照明（示例）",
-    "space_type": "景观",
-    "year": 2025,
-    "region": "桂林",
-    "area_m2": 1200,
-    "floor_height_m": null,
-    "target_lux": 50,
+    "title": "金府大院住宅轻智能照明",
+    "space_type": "住宅",
+    "year": 2026,
+    "region": "桂平",
+    "area_m2": 124,
+    "floor_height_m": 2.8,
+    "target_lux": 200,
     "fixtures": [
       {
-        "type": "LED投光灯",
-        "model": "FL-100W-RGBW",
-        "watt": 100,
-        "lumen": 9000,
-        "cct": 4000,
-        "cri": 80,
-        "qty": 28,
-        "layout": "绿化带与雕塑重点投光"
+        "type": "CX20轨道灯",
+        "model": "CX20",
+        "watt": 12,
+        "lumen": 1056,
+        "cct": 3000,
+        "cri": 90,
+        "qty": 16,
+        "layout": "客餐厅轨道布灯"
       },
       {
-        "type": "LED洗墙灯",
-        "model": "WL-18W-30K",
-        "watt": 18,
-        "lumen": 1600,
+        "type": "合III射灯",
+        "model": "合III",
+        "watt": 7,
+        "lumen": 616,
         "cct": 3000,
-        "cri": 80,
-        "qty": 46,
-        "layout": "台阶与景墙洗墙"
+        "cri": 90,
+        "qty": 30,
+        "layout": "卧室/过道"
+      },
+      {
+        "type": "虹昀SCOB灯带",
+        "model": "虹昀SCOB",
+        "watt": 8,
+        "lumen": 704,
+        "cct": 3000,
+        "cri": 90,
+        "qty": 27,
+        "layout": "天花暗槽"
       }
     ],
-    "budget_range": "25-40 万",
+    "budget_range": "不便公开",
     "design_points": [
-      "避免光污染与溢散光",
-      "色温控制在 3000K 以内",
-      "节假日 DMX 场景"
+      "轻智能为主",
+      "无主灯 + 轨道灯组合",
+      "灯具数量与功率按面积/功率密度反推，待校对"
     ],
     "highlights": [
-      "周末灯光秀场景",
-      "夜间照度与周边协调不刺眼"
+      "轻智能配置",
+      "轨道灯 + 射灯 + 灯带的标准化组合"
     ],
     "reuse_points": [
-      "景观照明先定色温纪律，再谈效果",
-      "防溢散光是验收与投诉重点"
+      "轻智能方案适合精装房改造",
+      "标准化组合可复制到同类户型"
     ],
-    "raw_text": "示例脱敏资料：城市广场夜景照明，含绿化投光、景墙洗墙与节假日灯光秀。",
+    "raw_text": "",
     "status": "已确认",
     "visibility": "public",
     "tags": [
-      "景观",
-      "夜景",
-      "光污染"
+      "住宅",
+      "轻智能",
+      "无主灯"
     ],
     "cover": "/demo/cases/09-1.jpg",
     "media": [
@@ -678,46 +785,65 @@
     "hasRealPhotos": true
   },
   {
-    "title": "某医院走廊照明（示例）",
-    "space_type": "医疗",
-    "year": 2023,
+    "title": "九宸府住宅轻智能照明",
+    "space_type": "住宅",
+    "year": 2026,
     "region": "南宁",
-    "area_m2": 420,
-    "floor_height_m": 2.6,
+    "area_m2": 134,
+    "floor_height_m": 2.8,
     "target_lux": 200,
     "fixtures": [
       {
-        "type": "净化灯盘",
-        "model": "CL-36W-40K",
-        "watt": 36,
-        "lumen": 3200,
-        "cct": 4000,
-        "cri": 85,
-        "qty": 46,
-        "layout": "走廊 3m 间距均布"
+        "type": "CX20轨道灯",
+        "model": "CX20",
+        "watt": 12,
+        "lumen": 1056,
+        "cct": 3000,
+        "cri": 90,
+        "qty": 18,
+        "layout": "客餐厅轨道布灯"
+      },
+      {
+        "type": "合III射灯",
+        "model": "合III",
+        "watt": 7,
+        "lumen": 616,
+        "cct": 3000,
+        "cri": 90,
+        "qty": 30,
+        "layout": "卧室/过道"
+      },
+      {
+        "type": "虹昀SCOB灯带",
+        "model": "虹昀SCOB",
+        "watt": 8,
+        "lumen": 704,
+        "cct": 3000,
+        "cri": 90,
+        "qty": 30,
+        "layout": "天花暗槽"
       }
     ],
-    "budget_range": "8-12 万",
+    "budget_range": "不便公开",
     "design_points": [
-      "低眩光避免病人平躺时刺眼",
-      "夜间值班模式降到 30%",
-      "易清洁灯具外壳"
+      "轻智能配置",
+      "轨道灯 + 射灯 + 灯带的组合",
+      "灯具数量与功率按面积/功率密度反推，待校对"
     ],
     "highlights": [
-      "UGR<19，夜间低照度模式",
-      "灯具可擦洗满足院感要求"
+      "轻智能",
+      "标准化布灯，施工与调试效率高"
     ],
     "reuse_points": [
-      "医疗空间眩光与清洁性优先于美观",
-      "夜间模式是医院刚需"
+      "标准化布灯清单可以做成报价模板",
+      "轻智能适合预算敏感的批量项目"
     ],
-    "raw_text": "示例脱敏资料：医院住院部走廊照明，含夜间值班低照度模式与易清洁灯具要求。",
+    "raw_text": "",
     "status": "已确认",
     "visibility": "public",
     "tags": [
-      "医疗",
-      "走廊",
-      "低眩光"
+      "住宅",
+      "轻智能"
     ],
     "cover": "/demo/cases/10-1.jpg",
     "media": [
