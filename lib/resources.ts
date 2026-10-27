@@ -18,10 +18,33 @@ export type ResourceItem = {
   original_name: string;
   mime: string | null;
   size_kb: number;
+  visibility: string;
+  public_url: string | null;
   created_at: string;
 };
 
 export type ResourceWithFile = ResourceItem & { stored_name: string };
+
+/** 公网演示站用的"已发布"资料清单（数据来自 seed/resources-public.json，文件在 public/resources/） */
+export type PublicResource = {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  url: string;
+  sizeKB: number;
+  updatedAt: string;
+  tags: string[];
+};
+
+export function listPublicResources(): PublicResource[] {
+  try {
+    const file = path.join(process.cwd(), "seed", "resources-public.json");
+    return JSON.parse(fs.readFileSync(file, "utf8")) as PublicResource[];
+  } catch {
+    return [];
+  }
+}
 
 export function listResources(category?: string): ResourceItem[] {
   if (isDemo()) return [];

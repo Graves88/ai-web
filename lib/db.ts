@@ -67,9 +67,23 @@ export function getDb(): DatabaseSync {
       original_name TEXT NOT NULL,
       mime          TEXT,
       size_kb       INTEGER NOT NULL DEFAULT 0,
+      visibility    TEXT NOT NULL DEFAULT 'internal',
+      public_url    TEXT,
       created_at    TEXT NOT NULL DEFAULT (datetime('now'))
     );
   `);
+
+  // 轻量迁移：老库补列（INTERNAL → 可公开发布）
+  for (const sql of [
+    "ALTER TABLE resources ADD COLUMN visibility TEXT NOT NULL DEFAULT 'internal'",
+    "ALTER TABLE resources ADD COLUMN public_url TEXT",
+  ]) {
+    try {
+      conn.exec(sql);
+    } catch {
+      /* 列已存在 */
+    }
+  }
 
   db = conn;
   globalForDb.__casesDb = conn;
