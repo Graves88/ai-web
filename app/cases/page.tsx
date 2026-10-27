@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { listCases, listSpaceTypes } from "@/lib/cases";
+import { listCases, listFixtures, listRegions, listSpaceTypes } from "@/lib/cases";
 import { SPACE_EMOJI, SPACE_GRADIENT, SPACE_TYPES } from "@/lib/constants";
 
 // 每次请求都读数据库（不预渲染成静态页）
 export const dynamic = "force-dynamic";
 
-type SearchParams = Promise<{ space?: string; q?: string }>;
+type SearchParams = Promise<{ space?: string; q?: string; city?: string; fixture?: string }>;
 
 // 瀑布流的关键：不同卡片不同高度，视觉上才"活"
 function coverAspect(index: number): string {
@@ -20,18 +20,33 @@ export default async function CasesPage({ searchParams }: { searchParams: Search
   const sp = await searchParams;
   const space = (sp.space ?? "").trim();
   const q = (sp.q ?? "").trim();
+  const city = (sp.city ?? "").trim();
+  const fixture = (sp.fixture ?? "").trim();
 
-  const cases = listCases({ spaceType: space || undefined, keyword: q || undefined });
+  const cases = listCases({
+    spaceType: space || undefined,
+    region: city || undefined,
+    fixture: fixture || undefined,
+    keyword: q || undefined,
+  });
   const allSpaceTypes = listSpaceTypes();
-  const hasFilter = Boolean(space || q);
+  const allRegions = listRegions();
+  const allFixtures = listFixtures();
+  const hasFilter = Boolean(space || q || city || fixture);
   const demo = process.env.DEMO_MODE === "1";
 
-  const hrefWith = (next: { space?: string; q?: string }) => {
+  const hrefWith = (next: { space?: string; q?: string; city?: string; fixture?: string }) => {
     const params = new URLSearchParams();
-    const nextSpace = next.space ?? space;
-    const nextQ = next.q ?? q;
-    if (nextSpace) params.set("space", nextSpace);
-    if (nextQ) params.set("q", nextQ);
+    const v = {
+      space: next.space ?? space,
+      q: next.q ?? q,
+      city: next.city ?? city,
+      fixture: next.fixture ?? fixture,
+    };
+    if (v.space) params.set("space", v.space);
+    if (v.q) params.set("q", v.q);
+    if (v.city) params.set("city", v.city);
+    if (v.fixture) params.set("fixture", v.fixture);
     const qs = params.toString();
     return qs ? `/cases?${qs}` : "/cases";
   };
@@ -46,10 +61,21 @@ export default async function CasesPage({ searchParams }: { searchParams: Search
               <h1 className="truncate text-[17px] font-semibold tracking-tight">照明落地案例库</h1>
               <p className="mt-0.5 text-[11px] text-[var(--muted)]">
                 {hasFilter ? `筛出 ${cases.length} 条` : `${cases.length} 个案例 · ${allSpaceTypes.length} 类场所`}
+                {hasFilter && (
+                  <Link href="/cases" className="ml-1.5 underline underline-offset-2">
+                    清空
+                  </Link>
+                )}
                 <span className="mx-1">·</span>示例数据已脱敏
               </p>
             </div>
             <div className="flex shrink-0 items-center gap-2">
+              <Link
+                href="/resources"
+                className="inline-flex min-h-9 items-center rounded-full bg-black/[0.05] px-3 text-[13px] font-medium dark:bg-white/[0.08]"
+              >
+                📎 资料
+              </Link>
               {demo ? (
                 <span className="rounded-full bg-amber-500/10 px-2.5 py-1 text-[11px] font-medium text-amber-700 dark:text-amber-300">
                   只读演示
@@ -68,12 +94,14 @@ export default async function CasesPage({ searchParams }: { searchParams: Search
           {/* 搜索 */}
           <form action="/cases" method="get" className="mt-2.5 flex items-center gap-2">
             {space && <input type="hidden" name="space" value={space} />}
+            {city && <input type="hidden" name="city" value={city} />}
+            {fixture && <input type="hidden" name="fixture" value={fixture} />}
             <div className="flex min-h-9 flex-1 items-center gap-2 rounded-full bg-black/[0.04] px-3.5 dark:bg-white/[0.07]">
               <span className="text-[13px] text-[var(--muted)]">🔍</span>
               <input
                 name="q"
                 defaultValue={q}
-                placeholder="搜案例 / 灯具 / 场所…"
+                placeholder="搜案例 / 灯具型号 / 城市…"
                 inputMode="search"
                 className="h-9 w-full bg-transparent text-base outline-none placeholder:text-[var(--muted)] sm:text-[13px]"
               />
@@ -110,6 +138,76 @@ export default async function CasesPage({ searchParams }: { searchParams: Search
               );
             })}
           </div>
+
+          {/* 城市 */}
+          {allRegions.length > 1 && (
+            <div className="no-scrollbar -mx-4 mt-1.5 flex items-center gap-2 overflow-x-auto px-4 pb-1">
+              <span className="shrink-0 text-[11px] text-[var(--muted)]">城市</span>
+              <Link
+                href={hrefWith({ city: "" })}
+                className={
+                  (city
+                    ? "bg-black/[0.04] text-[var(--muted)] dark:bg-white/[0.07]"
+                    : "bg-[var(--foreground)] text-[var(--background)]") +
+                  " inline-flex min-h-7 shrink-0 items-center rounded-full px-3 text-[12px]"
+                }
+              >
+                全部
+              </Link>
+              {allRegions.map((r) => {
+                const active = city === r;
+                return (
+                  <Link
+                    key={r}
+                    href={active ? hrefWith({ city: "" }) : hrefWith({ city: r })}
+                    className={
+                      (active
+                        ? "bg-[var(--foreground)] text-[var(--background)]"
+                        : "bg-black/[0.04] text-[var(--muted)] dark:bg-white/[0.07]") +
+                      " inline-flex min-h-7 shrink-0 items-center rounded-full px-3 text-[12px]"
+                    }
+                  >
+                    {r}
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+
+          {/* 灯具型号 / 类型 */}
+          {allFixtures.length > 1 && (
+            <div className="no-scrollbar -mx-4 mt-1.5 flex items-center gap-2 overflow-x-auto px-4 pb-1">
+              <span className="shrink-0 text-[11px] text-[var(--muted)]">灯具</span>
+              <Link
+                href={hrefWith({ fixture: "" })}
+                className={
+                  (fixture
+                    ? "bg-black/[0.04] text-[var(--muted)] dark:bg-white/[0.07]"
+                    : "bg-[var(--foreground)] text-[var(--background)]") +
+                  " inline-flex min-h-7 shrink-0 items-center rounded-full px-3 text-[12px]"
+                }
+              >
+                全部
+              </Link>
+              {allFixtures.map((f) => {
+                const active = fixture === f;
+                return (
+                  <Link
+                    key={f}
+                    href={active ? hrefWith({ fixture: "" }) : hrefWith({ fixture: f })}
+                    className={
+                      (active
+                        ? "bg-[var(--foreground)] text-[var(--background)]"
+                        : "bg-black/[0.04] text-[var(--muted)] dark:bg-white/[0.07]") +
+                      " inline-flex min-h-7 shrink-0 items-center rounded-full px-3 text-[12px]"
+                    }
+                  >
+                    {f}
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
 

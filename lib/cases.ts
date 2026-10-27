@@ -1,6 +1,6 @@
 import { getDb } from "./db";
 import { calcTotals, type Fixture } from "./calc";
-import { demoGetCase, demoListCases, demoListSpaceTypes } from "./demo";
+import { demoGetCase, demoListCases, demoListFixtures, demoListRegions, demoListSpaceTypes } from "./demo";
 
 // 纯计算与 Fixture 类型放在 lib/calc.ts（客户端也可安全引用）
 export { calcTotals, type Fixture } from "./calc";
@@ -152,7 +152,15 @@ export function createCase(input: CaseInput): number {
   return Number(info.lastInsertRowid);
 }
 
-export function listCases(filter?: { spaceType?: string; keyword?: string }): CaseItem[] {
+/** 列表筛选条件：场所 / 城市 / 灯具（型号或类型）/ 关键词 */
+export type CaseFilter = {
+  spaceType?: string;
+  region?: string;
+  fixture?: string;
+  keyword?: string;
+};
+
+export function listCases(filter?: CaseFilter): CaseItem[] {
   if (isDemo()) return demoListCases(filter);
   const db = getDb();
   const where: string[] = [];
@@ -161,9 +169,21 @@ export function listCases(filter?: { spaceType?: string; keyword?: string }): Ca
     where.push("space_type = ?");
     params.push(filter.spaceType);
   }
+  if (filter?.region) {
+    where.push("region = ?");
+    params.push(filter.region);
+  }
+  if (filter?.fixture) {
+    where.push("fixtures LIKE ?");
+    params.push(`%${filter.fixture}%`);
+  }
   if (filter?.keyword) {
-    where.push("(title LIKE ? OR IFNULL(raw_text,'') LIKE ?)");
-    params.push(`%${filter.keyword}%`, `%${filter.keyword}%`);
+    // 搜索覆盖：标题、原始资料、灯具清单(JSON)、设计要点、亮点、标签、城市
+    where.push(
+      "(title LIKE ? OR IFNULL(raw_text,'') LIKE ? OR IFNULL(fixtures,'') LIKE ? OR IFNULL(design_points,'') LIKE ? OR IFNULL(highlights,'') LIKE ? OR IFNULL(tags,'') LIKE ? OR IFNULL(region,'') LIKE ?)",
+    );
+    const like = `%${filter.keyword}%`;
+    params.push(like, like, like, like, like, like, like);
   }
   const sql =
     "SELECT * FROM cases" + (where.length ? " WHERE " + where.join(" AND ") : "") + " ORDER BY year DESC, id DESC";
@@ -232,4 +252,29 @@ export function listSpaceTypes(): string[] {
     n: number;
   }[];
   return rows.map((r) => r.space_type);
+}
+
+/** 城市列表（按案例数排序） */
+export function listRegions(): string[] {
+  if (isDemo()) return demoListRegions();
+  const db = getDb();
+  const rows = db
+    .prepare("SELECT region AS v, COUNT(*) AS n FROM cases WHERE region IS NOT NULL AND region <> '' GROUP BY region ORDER BY n DESC, region")
+    .all() as unknown as { v: string; n: number }[];
+  return rows.map((r) => r.v);
+}
+
+/** 灯具型号/类型列表（从 fixtures JSON 里提取，按出现次数排序） */
+export function listFixtures(): string[] {
+  if (isDemo()) return demoListFixtures();
+  const db = getDb();
+  const rows = db.prepare("SELECT fixtures FROM cases").all() as unknown as { fixtures: string }[];
+  const counts = new Map<string, number>();
+  for (const r of rows) {
+    for (const f of parseJsonArray<Fixture>(r.fixtures, [])) {
+      const key = (f.model && f.model !== "—" ? f.model : f.type) || "";
+      if (key) counts.set(key, (counts.get(key) ?? 0) + 1);
+    }
+  }
+  return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([k]) => k);
 }

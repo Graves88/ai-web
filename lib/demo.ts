@@ -67,14 +67,41 @@ function toItems(): CaseItem[] {
   return cache;
 }
 
-export function demoListCases(filter?: { spaceType?: string; keyword?: string }): CaseItem[] {
+export function demoListCases(filter?: {
+  spaceType?: string;
+  region?: string;
+  fixture?: string;
+  keyword?: string;
+}): CaseItem[] {
   let rows = toItems();
   if (filter?.spaceType) rows = rows.filter((c) => c.space_type === filter.spaceType);
+  if (filter?.region) rows = rows.filter((c) => (c.region ?? "") === filter.region);
+  if (filter?.fixture) {
+    const f = filter.fixture.toLowerCase();
+    rows = rows.filter((c) =>
+      c.fixtures.some(
+        (x) => (x.model ?? "").toLowerCase().includes(f) || (x.type ?? "").toLowerCase().includes(f),
+      ),
+    );
+  }
   if (filter?.keyword) {
     const k = filter.keyword.toLowerCase();
-    rows = rows.filter(
-      (c) => c.title.toLowerCase().includes(k) || (c.raw_text ?? "").toLowerCase().includes(k),
-    );
+    // 全字段搜索：模拟 DB 侧 LIKE 覆盖范围（标题/资料/灯具/要点/亮点/标签/城市）
+    rows = rows.filter((c) => {
+      const hay = [
+        c.title,
+        c.raw_text ?? "",
+        c.region ?? "",
+        c.design_points.join(" "),
+        c.highlights.join(" "),
+        c.reuse_points.join(" "),
+        c.tags.join(" "),
+        c.fixtures.map((x) => `${x.type} ${x.model ?? ""} ${x.layout ?? ""}`).join(" "),
+      ]
+        .join(" ")
+        .toLowerCase();
+      return hay.includes(k);
+    });
   }
   return [...rows].sort((a, b) => (b.year ?? 0) - (a.year ?? 0) || b.id - a.id);
 }
@@ -87,6 +114,25 @@ export function demoListSpaceTypes(): string[] {
   const counts = new Map<string, number>();
   for (const c of toItems()) counts.set(c.space_type, (counts.get(c.space_type) ?? 0) + 1);
   return [...counts.entries()].sort((a, b) => b[1] - a[1]).map(([t]) => t);
+}
+
+export function demoListRegions(): string[] {
+  const counts = new Map<string, number>();
+  for (const c of toItems()) {
+    if (c.region) counts.set(c.region, (counts.get(c.region) ?? 0) + 1);
+  }
+  return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([r]) => r);
+}
+
+export function demoListFixtures(): string[] {
+  const counts = new Map<string, number>();
+  for (const c of toItems()) {
+    for (const f of c.fixtures) {
+      const key = f.model && f.model !== "—" ? f.model : f.type;
+      if (key) counts.set(key, (counts.get(key) ?? 0) + 1);
+    }
+  }
+  return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([k]) => k);
 }
 
 export function demoCaseCount(): number {
