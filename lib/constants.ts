@@ -30,6 +30,12 @@ export const SPACE_GRADIENT: Record<string, string> = {
 export const CASE_STATUSES = ["待校对", "已确认"] as const;
 export type CaseStatus = (typeof CASE_STATUSES)[number];
 
+/** 资料中心：分类与上传限制（零依赖，客户端组件也可安全 import） */
+export const RESOURCE_CATEGORIES = ["产品资料", "在售清单", "安装手册", "规范标准", "培训资料", "其他"] as const;
+export type ResourceCategory = (typeof RESOURCE_CATEGORIES)[number];
+export const MAX_UPLOAD_MB = 25;
+export const ALLOWED_EXT = [".pdf", ".xlsx", ".xls", ".pptx", ".docx", ".jpg", ".jpeg", ".png", ".mp4", ".zip"];
+
 export const CASE_VISIBILITIES = ["private", "internal", "public"] as const;
 export type CaseVisibility = (typeof CASE_VISIBILITIES)[number];
 
