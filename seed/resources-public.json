@@ -1,10 +1,22 @@
 [
   {
+    "id": 27,
+    "title": "欧普家用智能照明在售清单-（共享清单）-26年10月",
+    "description": "对外版：产品参数清单（不含价格）；价格与政策请联系对接销售。",
+    "category": "在售清单",
+    "url": "/resources/01-price.pdf",
+    "sizeKB": 1042,
+    "updatedAt": "2026-10-27",
+    "tags": [
+      "在售清单"
+    ]
+  },
+  {
     "id": 26,
     "title": "零售渠道-2026晾衣机&台灯新品发布",
     "description": "产品/业务资料（PDF，由原文件转换生成；原文件：产品资料_零售渠道-2026晾衣机&台灯新品发布.pdf）",
     "category": "产品资料",
-    "url": "/resources/01-product.pdf",
+    "url": "/resources/02-product.pdf",
     "sizeKB": 3430,
     "updatedAt": "2026-10-27",
     "tags": [
@@ -16,7 +28,7 @@
     "title": "2691装饰灯新品介绍 最终版",
     "description": "产品/业务资料（PDF，由原文件转换生成；原文件：产品资料_❤️2691装饰灯新品介绍 最终版.pdf）",
     "category": "产品资料",
-    "url": "/resources/02-product.pdf",
+    "url": "/resources/03-product.pdf",
     "sizeKB": 9325,
     "updatedAt": "2026-10-27",
     "tags": [
@@ -28,7 +40,7 @@
     "title": "2691新品订货会-筒射",
     "description": "产品/业务资料（PDF，由原文件转换生成；原文件：产品资料_2691新品订货会-筒射.pdf）",
     "category": "产品资料",
-    "url": "/resources/03-product.pdf",
+    "url": "/resources/04-product.pdf",
     "sizeKB": 1791,
     "updatedAt": "2026-10-27",
     "tags": [
@@ -40,7 +52,7 @@
     "title": "2691新品订货会-电工",
     "description": "产品/业务资料（PDF，由原文件转换生成；原文件：产品资料_2691新品订货会-电工.pdf）",
     "category": "产品资料",
-    "url": "/resources/04-product.pdf",
+    "url": "/resources/05-product.pdf",
     "sizeKB": 5426,
     "updatedAt": "2026-10-27",
     "tags": [
@@ -52,7 +64,7 @@
     "title": "2691新品订货会-电器",
     "description": "产品/业务资料（PDF，由原文件转换生成；原文件：产品资料_2691新品订货会-电器.pdf）",
     "category": "产品资料",
-    "url": "/resources/05-product.pdf",
+    "url": "/resources/06-product.pdf",
     "sizeKB": 2065,
     "updatedAt": "2026-10-27",
     "tags": [
@@ -64,7 +76,7 @@
     "title": "2691新品订货会-吸顶灯",
     "description": "产品/业务资料（PDF，由原文件转换生成；原文件：产品资料_2691新品订货会-吸顶灯.pdf）",
     "category": "产品资料",
-    "url": "/resources/06-product.pdf",
+    "url": "/resources/07-product.pdf",
     "sizeKB": 8525,
     "updatedAt": "2026-10-27",
     "tags": [
@@ -76,7 +88,7 @@
     "title": "2691新品订货会-厨卫灯",
     "description": "产品/业务资料（PDF，由原文件转换生成；原文件：产品资料_2691新品订货会-厨卫灯.pdf）",
     "category": "产品资料",
-    "url": "/resources/07-product.pdf",
+    "url": "/resources/08-product.pdf",
     "sizeKB": 1394,
     "updatedAt": "2026-10-27",
     "tags": [
@@ -88,7 +100,7 @@
     "title": "2691新品订货会-光源",
     "description": "产品/业务资料（PDF，由原文件转换生成；原文件：产品资料_2691新品订货会-光源.pdf）",
     "category": "产品资料",
-    "url": "/resources/08-product.pdf",
+    "url": "/resources/09-product.pdf",
     "sizeKB": 2910,
     "updatedAt": "2026-10-27",
     "tags": [
@@ -100,7 +112,7 @@
     "title": "2691新品订货会-传感器",
     "description": "产品/业务资料（PDF，由原文件转换生成；原文件：产品资料_2691新品订货会-传感器.pdf）",
     "category": "产品资料",
-    "url": "/resources/09-product.pdf",
+    "url": "/resources/10-product.pdf",
     "sizeKB": 1618,
     "updatedAt": "2026-10-27",
     "tags": [
@@ -112,7 +124,7 @@
     "title": "0907-秋订会风扇灯产品讲解-零售V3",
     "description": "产品/业务资料（PDF，由原文件转换生成；原文件：产品资料_0907-秋订会风扇灯产品讲解-零售V3.pdf）",
     "category": "产品资料",
-    "url": "/resources/10-product.pdf",
+    "url": "/resources/11-product.pdf",
     "sizeKB": 2137,
     "updatedAt": "2026-10-27",
     "tags": [

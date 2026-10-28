@@ -17,7 +17,8 @@ export default async function AskPage({ searchParams }: { searchParams: Promise<
           <div className="min-w-0">
             <h1 className="truncate text-[17px] font-semibold tracking-tight">问资料</h1>
             <p className="mt-0.5 text-[11px] text-[var(--muted)]">
-              {demo ? "知识库为内部资料" : `${stats.docs} 份文档 · ${stats.chunks} 个文本块 · ${(stats.chars / 10000).toFixed(1)} 万字`}
+              {stats.docs} 份文档 · {stats.chunks} 个文本块 · {(stats.chars / 10000).toFixed(1)} 万字
+              {demo && <span className="ml-1">（公开资料版）</span>}
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-2">
@@ -37,39 +38,29 @@ export default async function AskPage({ searchParams }: { searchParams: Promise<
         </div>
 
         <div className="mx-auto w-full max-w-3xl px-4 pb-3">
-          {!demo && (
-            <form action="/ask" method="get" className="flex items-center gap-2">
-              <div className="flex min-h-11 flex-1 items-center gap-2 rounded-full bg-black/[0.05] px-4 dark:bg-white/[0.08]">
-                <span className="text-[14px] text-[var(--muted)]">🔎</span>
-                <input
-                  name="q"
-                  defaultValue={q}
-                  placeholder="搜产品型号 / 卖点 / 参数，如：晾衣机、520037020800、天境Lite"
-                  className="h-11 w-full bg-transparent text-base outline-none placeholder:text-[var(--muted)] sm:text-[14px]"
-                  autoFocus
-                />
-              </div>
-              <button
-                type="submit"
-                className="inline-flex min-h-11 shrink-0 items-center rounded-full bg-[var(--foreground)] px-4 text-[13px] font-medium text-[var(--background)]"
-              >
-                搜索
-              </button>
-            </form>
-          )}
+          <form action="/ask" method="get" className="flex items-center gap-2">
+            <div className="flex min-h-11 flex-1 items-center gap-2 rounded-full bg-black/[0.05] px-4 dark:bg-white/[0.08]">
+              <span className="text-[14px] text-[var(--muted)]">🔎</span>
+              <input
+                name="q"
+                defaultValue={q}
+                placeholder="搜产品型号 / 卖点 / 参数，如：晾衣机、520037020800、天境Lite"
+                className="h-11 w-full bg-transparent text-base outline-none placeholder:text-[var(--muted)] sm:text-[14px]"
+                autoFocus
+              />
+            </div>
+            <button
+              type="submit"
+              className="inline-flex min-h-11 shrink-0 items-center rounded-full bg-[var(--foreground)] px-4 text-[13px] font-medium text-[var(--background)]"
+            >
+              搜索
+            </button>
+          </form>
         </div>
       </div>
 
       <div className="mx-auto w-full max-w-3xl px-4 pb-12 pt-4">
-        {demo ? (
-          <div className="mt-16 text-center">
-            <p className="text-4xl">🔒</p>
-            <p className="mt-3 text-sm font-medium">知识库为内部资料</p>
-            <p className="mx-auto mt-2 max-w-md text-[12.5px] leading-relaxed text-[var(--muted)]">
-              产品资料全文检索在本地/内网环境可用；公网演示站只提供 PDF 下载。
-            </p>
-          </div>
-        ) : (
+        {
           <>
             {!q && (
               <div className="rounded-2xl border border-dashed border-black/[0.08] p-5 text-[12.5px] leading-relaxed text-[var(--muted)] dark:border-white/[0.1]">
@@ -126,7 +117,7 @@ export default async function AskPage({ searchParams }: { searchParams: Promise<
               </>
             )}
           </>
-        )}
+        }
       </div>
     </main>
   );
