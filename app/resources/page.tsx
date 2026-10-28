@@ -62,6 +62,12 @@ export default async function ResourcesPage({ searchParams }: { searchParams: Pr
           </div>
           <div className="flex shrink-0 items-center gap-2">
             <Link
+              href="/ask"
+              className="inline-flex min-h-9 items-center rounded-full bg-black/[0.05] px-3.5 text-[13px] font-medium dark:bg-white/[0.08]"
+            >
+              🔎 问资料
+            </Link>
+            <Link
               href="/cases"
               className="inline-flex min-h-9 items-center rounded-full bg-black/[0.05] px-3.5 text-[13px] font-medium dark:bg-white/[0.08]"
             >
