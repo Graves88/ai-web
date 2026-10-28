@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { kbStats, searchKb } from "@/lib/kb";
+import AskForm from "./AskForm";
 
 export const dynamic = "force-dynamic";
 
@@ -60,6 +61,8 @@ export default async function AskPage({ searchParams }: { searchParams: Promise<
       </div>
 
       <div className="mx-auto w-full max-w-3xl px-4 pb-12 pt-4">
+        <AskForm />
+        <p className="mb-2 mt-5 text-[11px] font-medium text-[var(--muted)]">关键词检索（不消耗 AI，直接返回原文片段）</p>
         {
           <>
             {!q && (
