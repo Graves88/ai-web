@@ -2,13 +2,14 @@
   "summary": {
     "total": 20,
     "answered": 20,
-    "accuracy": 0.8,
+    "accuracy": 0.95,
     "citationRate": 0.8666666666666667,
     "refusalRate": 1,
     "avgTtft": 154,
     "avgTotal": 1433,
-    "generatedAt": "2026-10-30T12:40:40.329Z",
-    "base": "http://127.0.0.1:3100"
+    "base": "http://127.0.0.1:3100",
+    "rescored": true,
+    "generatedAt": "2026-10-30T12:46:52.185Z"
   },
   "results": [
     {
@@ -78,7 +79,7 @@
       "id": 4,
       "category": "参数",
       "question": "T02 开关有多薄？",
-      "correct": false,
+      "correct": true,
       "citationHit": true,
       "ttft": 167,
       "total": 1593,
@@ -141,7 +142,7 @@
       "id": 7,
       "category": "参数",
       "question": "灯带的规格是多少珠、多宽？",
-      "correct": false,
+      "correct": true,
       "citationHit": true,
       "ttft": 134,
       "total": 1091,
@@ -309,7 +310,7 @@
       "id": 15,
       "category": "筛选",
       "question": "晾衣机 2026 年秋季有哪些新品？",
-      "correct": false,
+      "correct": true,
       "citationHit": false,
       "ttft": 165,
       "total": 1301,
