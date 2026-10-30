@@ -27,6 +27,17 @@ type RawChunk = { docId: number; page: number; title: string | null; text: strin
 const STOP = /[的了吗呢吧啊呀有有哪些什么怎么多少请问一下帮我查看看能不能是否还?？,，。！!、；;：:\s]/g;
 
 /** 把问句切成关键词（2-4 字 n-gram，去掉口语停用字） */
+/** 型号/数字类 token（T02、Ra97、LYJXW、520037020800、60000）——精确匹配价值最高 */
+function extractExactTokens(q: string): string[] {
+  const tokens = new Set<string>();
+  for (const m of q.matchAll(/[A-Za-z]{1,4}\d+[\w.-]*|\d{4,}/g)) tokens.add(m[0].toLowerCase());
+  for (const m of q.matchAll(/Ra\s*(\d+)/gi)) {
+    tokens.add(m[0].toLowerCase().replace(/\s+/g, "")); // ra97
+    tokens.add(m[1]); // 97（表格里常只写数字）
+  }
+  return [...tokens];
+}
+
 function buildKeywords(q: string): string[] {
   const cleaned = q.replace(STOP, " ").trim();
   const segments = cleaned.split(/\s+/).filter((s) => s.length >= 2);
@@ -41,15 +52,43 @@ function buildKeywords(q: string): string[] {
   return [...set];
 }
 
-function scoreText(text: string, keywords: string[]): { score: number; matched: number } {
-  const lower = text.toLowerCase();
+/**
+ * 打分规则（v2，固定下来的排序逻辑）
+ * - 普通关键词：命中 → +词长²
+ * - 标题命中：+词长²×2（标题往往是"这一段讲什么"的最强信号）
+ * - 型号/数字 token：+词长²×3（精确串，命中基本就锁定相关页）
+ * - 整句命中：+30
+ */
+function scoreText(
+  title: string | null,
+  text: string,
+  keywords: string[],
+  exactTokens: string[],
+  wholeQuery: string,
+): { score: number; matched: number } {
+  const lowerTitle = (title ?? "").toLowerCase();
+  const lowerText = text.toLowerCase();
   let score = 0;
   let matched = 0;
+
   for (const k of keywords) {
-    if (lower.includes(k)) {
+    const w = k.length * k.length;
+    if (lowerTitle.includes(k)) {
       matched++;
-      score += k.length * k.length; // 长词命中权重更高
+      score += w * 2;
+    } else if (lowerText.includes(k)) {
+      matched++;
+      score += w;
     }
+  }
+  for (const t of exactTokens) {
+    if (lowerText.includes(t)) {
+      matched++;
+      score += t.length * t.length * 3;
+    }
+  }
+  if (lowerText.includes(wholeQuery.toLowerCase()) || lowerTitle.includes(wholeQuery.toLowerCase())) {
+    score += 30;
   }
   return { score, matched };
 }
@@ -154,17 +193,17 @@ export function searchKb(query: string, limit = 8): KbHit[] {
   if (!q) return [];
 
   const keywords = buildKeywords(q);
+  const exactTokens = extractExactTokens(q);
   const map = publicMap();
   const rows = allChunks();
 
   const scored = rows
     .map((r) => {
-      const whole = r.text.toLowerCase().includes(q.toLowerCase()) || (r.title ?? "").toLowerCase().includes(q.toLowerCase());
-      const { score, matched } = scoreText(`${r.title ?? ""}\n${r.text}`, keywords);
-      return { r, score: score + (whole ? 20 : 0), matched };
+      const { score, matched } = scoreText(r.title, r.text, keywords, exactTokens, q);
+      return { r, score, matched };
     })
-    // 至少命中 1 个关键词（含整句命中）
-    .filter((x) => x.matched > 0 || x.score > 0)
+    // 至少命中 1 个关键词（含整句/型号命中）
+    .filter((x) => x.matched > 0)
     .sort((a, b) => b.score - a.score || a.r.page - b.r.page)
     .slice(0, limit);
 
@@ -175,7 +214,7 @@ export function searchKb(query: string, limit = 8): KbHit[] {
     page: r.page,
     title: r.title,
     snippet: makeSnippet(r.text, keywords[0] ?? q),
-    context: r.text.slice(0, 900),
+    context: r.text.slice(0, 1200),
     score,
     pdfUrl: matchPublicUrl(r.source, map),
   }));

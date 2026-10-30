@@ -9,7 +9,8 @@ const BASE_URL = process.env.LLM_BASE_URL ?? "https://api.deepseek.com/v1";
 const MODEL = process.env.LLM_MODEL ?? "deepseek-chat";
 const API_KEY = process.env.LLM_API_KEY ?? "";
 const TIMEOUT_MS = 55_000;
-const TOP_K = 5;
+const TOP_K = 8;
+const MAX_TOKENS = 900;
 
 const SSE_HEADERS = {
   "Content-Type": "text/event-stream; charset=utf-8",
@@ -91,26 +92,37 @@ export async function POST(req: Request) {
     req.signal.removeEventListener("abort", onClientAbort);
   };
 
-  let upstream: Response;
-  try {
-    upstream = await fetch(`${BASE_URL}/chat/completions`, {
+  // 上游偶发 5xx / 连接抖动：重试一次（评测里遇到过一次 "调用模型失败"）
+  const callUpstream = () =>
+    fetch(`${BASE_URL}/chat/completions`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${API_KEY}` },
       body: JSON.stringify({
         model: MODEL,
         messages: buildAskMessages(question, hits),
         temperature: 0.2,
-        max_tokens: 700,
+        max_tokens: MAX_TOKENS,
         stream: true,
       }),
       signal: controller.signal,
     });
+
+  let upstream: Response;
+  try {
+    upstream = await callUpstream();
   } catch (err) {
-    cleanup();
-    const aborted = controller.signal.aborted;
-    const msg = err instanceof Error ? err.message : String(err);
-    console.error("[api/ask] upstream fetch failed", msg);
-    return textStream(aborted ? "请求超时了，再试一次？" : "调用模型失败，稍后再试。");
+    if (controller.signal.aborted) {
+      cleanup();
+      return textStream("请求超时了，再试一次？");
+    }
+    console.warn("[api/ask] 第一次调用失败，重试一次", err instanceof Error ? err.message : String(err));
+    try {
+      upstream = await callUpstream();
+    } catch (err2) {
+      cleanup();
+      console.error("[api/ask] 重试仍失败", err2 instanceof Error ? err2.message : String(err2));
+      return textStream("调用模型失败，稍后再试。");
+    }
   }
 
   if (!upstream.ok || !upstream.body) {
