@@ -38,6 +38,19 @@ function extractExactTokens(q: string): string[] {
   return [...tokens];
 }
 
+/** 口语问法 → 资料里的书面词（问"多薄"，资料里写的是"超薄/厚度"） */
+const SYNONYMS: [string, string[]][] = [
+  ["显色指数", ["显指", "ra"]],
+  ["多薄", ["超薄", "厚度"]],
+  ["多宽", ["宽度", "尺寸"]],
+  ["多亮", ["亮度", "流明", "光通量"]],
+  ["几瓦", ["功率", "w"]],
+  ["多大功率", ["功率"]],
+  ["多少钱", ["价格", "单价"]],
+  ["保修", ["质保"]],
+  ["待上市", ["新品待上市"]],
+];
+
 function buildKeywords(q: string): string[] {
   const cleaned = q.replace(STOP, " ").trim();
   const segments = cleaned.split(/\s+/).filter((s) => s.length >= 2);
@@ -48,6 +61,10 @@ function buildKeywords(q: string): string[] {
       for (let i = 0; i + n <= seg.length; i++) set.add(seg.slice(i, i + n));
     }
     if (seg.length <= 4) set.add(seg);
+  }
+  // 同义词扩展：问法里的口语词 → 资料里的书面词
+  for (const [ask, extra] of SYNONYMS) {
+    if (q.includes(ask)) for (const e of extra) set.add(e);
   }
   return [...set];
 }
@@ -204,10 +221,33 @@ export function searchKb(query: string, limit = 8): KbHit[] {
     })
     // 至少命中 1 个关键词（含整句/型号命中）
     .filter((x) => x.matched > 0)
-    .sort((a, b) => b.score - a.score || a.r.page - b.r.page)
-    .slice(0, limit);
+    .sort((a, b) => b.score - a.score || a.r.page - b.r.page);
 
-  return scored.map(({ r, score }) => ({
+  // 来源多样性：普通文档最多 3 块；表格逐行块（1340 个产品行）最多 2 块，
+  // 避免行块把 PPT 卖点页挤掉（T02 厚度就靠电工第 18 页）。
+  const picked: typeof scored = [];
+  const used = new Map<string, number>();
+  for (const x of scored) {
+    if (picked.length >= limit) break;
+    const key = x.r.source;
+    const isRowChunk = key.includes("逐行切分");
+    const cap = isRowChunk ? 2 : 3;
+    const n = used.get(key) ?? 0;
+    if (n >= cap) continue;
+    used.set(key, n + 1);
+    picked.push(x);
+  }
+  // 不够 limit 时再按分数补满（放开限制）
+  if (picked.length < limit) {
+    for (const x of scored) {
+      if (picked.length >= limit) break;
+      if (!picked.includes(x)) picked.push(x);
+    }
+  }
+  picked.sort((a, b) => b.score - a.score);
+  picked.sort((a, b) => b.score - a.score);
+
+  return picked.map(({ r, score }) => ({
     docId: r.docId,
     source: r.source,
     type: r.type,

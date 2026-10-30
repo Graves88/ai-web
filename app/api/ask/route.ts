@@ -100,7 +100,7 @@ export async function POST(req: Request) {
       body: JSON.stringify({
         model: MODEL,
         messages: buildAskMessages(question, hits),
-        temperature: 0.2,
+        temperature: 0, // 评测要可复现，固定为 0
         max_tokens: MAX_TOKENS,
         stream: true,
       }),
@@ -193,7 +193,24 @@ export async function POST(req: Request) {
   return new Response(stream, { headers: SSE_HEADERS });
 }
 
-export async function GET() {
+export async function GET(req: Request) {
+  const url = new URL(req.url);
+  const q = (url.searchParams.get("q") ?? "").trim();
+  // 调试用：/api/ask?q=xxx 直接返回检索到的片段（不调用模型，便于排查召回问题）
+  if (q) {
+    const hits = searchKb(q, TOP_K);
+    return Response.json({
+      question: q,
+      topK: TOP_K,
+      hits: hits.map((h) => ({
+        source: h.source,
+        page: h.page,
+        title: h.title,
+        score: h.score,
+        text: h.context.slice(0, 200),
+      })),
+    });
+  }
   return Response.json({
     endpoint: "POST /api/ask",
     body: { question: "string(2-200)" },
