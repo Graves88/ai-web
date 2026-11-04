@@ -217,6 +217,7 @@ export function searchKb(query: string, limit = 8): KbHit[] {
   const scored = rows
     .map((r) => {
       const { score, matched } = scoreText(r.title, r.text, keywords, exactTokens, q);
+      // 试过长度归一化（score/sqrt(1+len/600)），会让在售清单的表格页排序大幅下滑，已回退
       return { r, score, matched };
     })
     // 至少命中 1 个关键词（含整句/型号命中）

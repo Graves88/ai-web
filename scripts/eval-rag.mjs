@@ -14,10 +14,10 @@ const questions = JSON.parse(fs.readFileSync("evals/rag-questions.json", "utf8")
 
 const REFUSAL_HINTS = ["未提及", "没有找到", "未找到", "资料中未", "没有相关", "无法回答", "不包含", "没有提"];
 
-/** 只有"开头就是拒答"才算真拒答；正文里顺带说"其他参数未提及"不算 */
+/** 只有"第一句就是拒答"才算真拒答；允许"先答已给出的部分，再补一句其余未提及" */
 function isRefusalAnswer(answer) {
-  const head = (answer ?? "").slice(0, 90);
-  return REFUSAL_HINTS.some((h) => head.includes(h));
+  const firstSentence = (answer ?? "").split("\n")[0].split("。")[0];
+  return REFUSAL_HINTS.some((h) => firstSentence.includes(h));
 }
 
 function judge(q, answer, sources) {
