@@ -164,26 +164,58 @@ if (RESCORE) {
   });
   writeReport(results, prev.summary?.base ?? BASE, true);
 } else {
-  const results = [];
-  for (const q of questions) {
-    const r = await ask(q.question);
-    const sources = r.sources ?? [];
-    const { correct, citationHit } = judge(q, r.answer ?? "", sources);
-    results.push({
+  const roundsArg = process.argv.find((a) => a.startsWith("--rounds="));
+  const ROUNDS = Math.max(1, Math.min(5, Number(roundsArg ? roundsArg.slice(9) : 1) || 1));
+  if (ROUNDS > 1) console.log(`评测 ${ROUNDS} 轮取多数（单轮噪声约 ±10%，多轮更可信）`);
+
+  // 每轮都跑全量，再按题目汇总
+  const perRound = [];
+  for (let round = 1; round <= ROUNDS; round++) {
+    const roundResults = [];
+    for (const q of questions) {
+      const r = await ask(q.question);
+      const sources = r.sources ?? [];
+      const { correct, citationHit } = judge(q, r.answer ?? "", sources);
+      roundResults.push({
+        id: q.id,
+        category: q.category,
+        question: q.question,
+        correct,
+        citationHit,
+        ttft: r.ttft,
+        total: r.total,
+        answer: (r.answer ?? "").slice(0, 400),
+        sources: sources.map((s) => `${s.doc}`.replace(/\.(pptx|xlsx)$/i, "") + ` p${s.page}`),
+        error: r.error ?? null,
+        round,
+      });
+    }
+    const okCount = roundResults.filter((r) => r.correct).length;
+    console.log(`  第 ${round}/${ROUNDS} 轮：${okCount}/${questions.length}`);
+    perRound.push(roundResults);
+  }
+
+  // 合并：某题多数轮正确 → 判正确（3 轮制即 ≥2）
+  const need = Math.floor(ROUNDS / 2) + 1;
+  const results = questions.map((q) => {
+    const tries = perRound.map((rd) => rd.find((x) => x.id === q.id)).filter(Boolean);
+    const okRounds = tries.filter((t) => t.correct).length;
+    const citeTries = tries.filter((t) => t.citationHit !== null);
+    const citeOk = citeTries.length ? citeTries.filter((t) => t.citationHit).length : 0;
+    return {
       id: q.id,
       category: q.category,
       question: q.question,
-      correct,
-      citationHit,
-      ttft: r.ttft,
-      total: r.total,
-      answer: (r.answer ?? "").slice(0, 400),
-      sources: sources.map((s) => `${s.doc}`.replace(/\.(pptx|xlsx)$/i, "") + ` p${s.page}`),
-      error: r.error ?? null,
-    });
-    const mark = correct ? "✅" : "❌";
-    const cite = citationHit === null ? "" : citationHit ? " 引用✅" : " 引用❌";
-    console.log(`${String(q.id).padStart(2, "0")} ${mark} [${q.category}] ${q.question}${cite}  ${r.ttft}ms`);
-  }
+      correct: okRounds >= need,
+      citationHit: citeTries.length ? citeOk >= need : null,
+      rounds: ROUNDS,
+      passRounds: okRounds,
+      ttft: Math.round(tries.reduce((s, t) => s + t.ttft, 0) / Math.max(1, tries.length)),
+      total: Math.round(tries.reduce((s, t) => s + t.total, 0) / Math.max(1, tries.length)),
+      answer: (tries.find((t) => t.correct)?.answer ?? tries[0]?.answer ?? "").slice(0, 400),
+      sources: (tries.find((t) => t.correct)?.sources ?? tries[0]?.sources ?? []),
+      error: tries.every((t) => t.error) ? tries[0].error : null,
+    };
+  });
   writeReport(results, BASE);
 }
